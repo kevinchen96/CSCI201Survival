@@ -1,5 +1,5 @@
+package player;
 import java.util.ArrayList;
-
 
 public class Player {
 	private int health, thirst, hunger, strength, defense;  //bars
