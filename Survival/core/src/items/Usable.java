@@ -2,6 +2,8 @@ package items;
 
 import java.awt.image.BufferedImage;
 
+import player.Player;
+
 public class Usable extends Item{
 	
 	private int up;
