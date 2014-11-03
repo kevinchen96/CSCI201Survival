@@ -36,6 +36,6 @@ public abstract class Item {
 		
 	}
 	
-	public abstract String itemType();
+	public abstract String getItemType();
 	
 }
