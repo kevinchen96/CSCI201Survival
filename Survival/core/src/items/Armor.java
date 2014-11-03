@@ -15,9 +15,7 @@ public class Armor extends Equippable{
 		return dp;
 	}
 
-	@Override
-	public String itemType() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getItemType() {
+		return "armor";
 	}
 }
