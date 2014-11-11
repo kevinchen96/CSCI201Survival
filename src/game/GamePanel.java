@@ -50,7 +50,7 @@ public class GamePanel extends JPanel  implements Runnable, KeyListener {
 			
 			elapsed = (double)(System.nanoTime() - start) / 1000000.0;
 			if(elapsed >= 60){
-				FRAME.setTitle(TITLE + "       ||       FPS: " + elapsed);
+				FRAME.setTitle(TITLE + "       ||       FPS: " + (int)elapsed);
 				render();
 				drawToScreen();
 				start = System.nanoTime();
