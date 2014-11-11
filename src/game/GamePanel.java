@@ -22,6 +22,7 @@ public class GamePanel extends JPanel  implements Runnable, KeyListener {
 		addKeyListener(this);
 		
 		FRAME.setSize(WIDTH, HEIGHT);
+		FRAME.setResizable(false);
 		FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		FRAME.setLocationRelativeTo(null);
 		FRAME.setFocusable(true);
