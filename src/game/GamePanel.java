@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import GameStates.GameStates;
+
 public class GamePanel extends JPanel  implements Runnable, KeyListener {
 	private static String TITLE = new String("Survival");
 	private static JFrame FRAME = new JFrame(TITLE);
@@ -15,10 +17,13 @@ public class GamePanel extends JPanel  implements Runnable, KeyListener {
 	public static int HEIGHT = 600;
 	private Graphics2D g;
 	private BufferedImage image;
+	private GameStates manager;
 	
 	public GamePanel(){
-		g = (Graphics2D) getGraphics();
+		
 		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		g = (Graphics2D) image.getGraphics();
+		manager = new GameStates();
 		addKeyListener(this);
 		
 		FRAME.setSize(WIDTH, HEIGHT);
@@ -62,6 +67,9 @@ public class GamePanel extends JPanel  implements Runnable, KeyListener {
 		
 	}
 	
+	public void draw(){
+		manager.draw(g);
+	}
 	//refreshes screen
 	public void drawToScreen(){
 		Graphics2D g2 = (Graphics2D) getGraphics();
