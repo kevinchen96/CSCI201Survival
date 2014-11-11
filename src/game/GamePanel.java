@@ -23,6 +23,7 @@ public class GamePanel extends JPanel  implements Runnable, KeyListener {
 		
 		FRAME.setSize(WIDTH, HEIGHT);
 		FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		FRAME.setLocationRelativeTo(null);
 		FRAME.setFocusable(true);
 		FRAME.requestFocus();
 		
@@ -34,7 +35,6 @@ public class GamePanel extends JPanel  implements Runnable, KeyListener {
 	}
 
 
-	@Override
 	public void run() {
 		long start = System.nanoTime(); 
 		double elapsed;
@@ -47,6 +47,7 @@ public class GamePanel extends JPanel  implements Runnable, KeyListener {
 				FRAME.setTitle(TITLE + "       ||       FPS: " + elapsed);
 				render();
 				drawToScreen();
+				start = System.nanoTime();
 			}
 			
 		}
