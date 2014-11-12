@@ -4,8 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
+import java.io.File;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 public class MenuState extends States {
 	private int current = 0;
@@ -14,7 +17,7 @@ public class MenuState extends States {
 	public MenuState(GameStates gsm){
 		manager = gsm;
 		try{
-			background = ImageIO.read(getClass().getResourceAsStream("src/test.jpg"));
+			background = ImageIO.read(new File("src/test.jpg"));
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -60,6 +63,7 @@ public class MenuState extends States {
 			choose();
 		}
 		else if(k == KeyEvent.VK_UP){
+			System.out.println("HI");
 			current--;
 			if(current == -1){
 				current = 2;
@@ -67,7 +71,7 @@ public class MenuState extends States {
 		}
 		else if(k == KeyEvent.VK_DOWN){
 			current++;
-			if(current == 2){
+			if(current == 3){
 				current = 0;
 			}
 		}
@@ -75,7 +79,11 @@ public class MenuState extends States {
 
 	public void choose() {
 		// TODO Auto-generated method stub
-		
+		if(current == 0){
+			String ip = JOptionPane.showInputDialog("Enter IP Address");
+			manager.setClient(new Client(ip));
+			manager.setState(1);
+		}
 		
 	}
 

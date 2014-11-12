@@ -5,13 +5,16 @@ import java.util.ArrayList;
 
 public class GameStates {
 	private ArrayList<States> states;
+	private Client user;
 	public int currentState;
 	public int MenuState = 0;
+	public int LoadingState = 1;
 	
 	public GameStates(){
 		states = new ArrayList<States>();
 		currentState = MenuState;
 		states.add(new MenuState(this));
+		states.add(new LoadingState(this));
 		
 	}
 	public void setState(int s){
@@ -29,5 +32,11 @@ public class GameStates {
 	}
 	public void keyReleased(int k){
 		states.get(currentState).keyReleased(k);
+	}
+	public void setClient(Client client){
+		user = client;
+	}
+	public Client getClient(){
+		return user;
 	}
 }
