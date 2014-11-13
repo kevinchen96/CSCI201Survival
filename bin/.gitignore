@@ -1,6 +1,7 @@
-/GameStates/
-/Monster/
 /game/
+/GameStates/
+/Map/
+/Monster/
 /items/
 /player/
 /server/

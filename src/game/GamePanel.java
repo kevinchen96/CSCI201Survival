@@ -18,20 +18,21 @@ import GameStates.GameStates;
 public class GamePanel extends JPanel  implements Runnable, KeyListener {
 	private static String TITLE = new String("SUVIVAL");
 	private static JFrame FRAME = new JFrame(TITLE);
-	public static int WIDTH = 800;
-	public static int HEIGHT = 600;
+	public static int WIDTH = 320;
+	public static int HEIGHT = 240;
+	public static int SCALE = 2;
 	private Graphics2D g;
 	private BufferedImage image;
 	private GameStates manager;
 	
 	public GamePanel(){
 		
-		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		image = new BufferedImage(WIDTH*SCALE, HEIGHT*SCALE, BufferedImage.TYPE_INT_RGB);
 		g = (Graphics2D) image.getGraphics();
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		manager = new GameStates();
 		
-		FRAME.setSize(WIDTH, HEIGHT);
+		FRAME.setSize(WIDTH*SCALE, HEIGHT*SCALE);
 		FRAME.setResizable(false);
 		FRAME.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		FRAME.addWindowListener(new WindowAdapter() {
