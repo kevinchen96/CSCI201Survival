@@ -30,7 +30,7 @@ public class Client extends Thread{
 				pw.flush();
 			}*/
 		} catch (Exception e) {
-			System.out.println("Error trying to connect to server " + e.getMessage());
+			numPlayers = "Error Connecting";
 		}  
 	}
 	
@@ -42,7 +42,6 @@ public class Client extends Thread{
 					System.out.println(line);
 					if(line.substring(0, 6).equals("JOINED")){
 						numPlayers = line;
-						System.out.println(line);
 					}
 				}
 			} catch (IOException e) {

@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Polygon;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.File;
@@ -59,10 +60,18 @@ public class LoadingState extends States {
 		g.fillPolygon(dialog);
 		g.setColor(Color.BLACK);
 		g.drawString("Waiting...", 380, 140);
-		String temp = manager.getClient().getnumPlayers() + "/4";
-		if(temp!=null){
-			System.out.println(temp);
+		String temp = manager.getClient().getnumPlayers();
+		if(temp.equals("Error Connecting")){
+			temp = "Error Connecting";
+			g.drawString(temp, 350, 160);
+			g.drawString("Return to Menu?", 350, 180);
+			g.setColor(Color.WHITE);
+			g.drawString("Ok", 390, 400);
+		}
+		else if(temp!=null){
+			temp += "/4";
 			g.drawString(temp, 368, 160);
+			g.drawString("Cancel", 380, 400);
 		}
 	
 		
@@ -72,7 +81,9 @@ public class LoadingState extends States {
 	@Override
 	public void keyPressed(int k) {
 		// TODO Auto-generated method stub
-
+		if(k == KeyEvent.VK_ENTER){
+			manager.setState(0);
+		}
 	}
 
 	@Override
