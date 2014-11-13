@@ -9,13 +9,16 @@ import java.util.Scanner;
 
 public class Client extends Thread{
 
-	private PrintWriter pw;
+	private static PrintWriter pw;
 	private BufferedReader br;
 	private String numPlayers;
+	public static boolean connected;
+	
 	public Client(String hostName) {
 		//try to connect to server
 		try {
 			Socket s = new Socket(hostName, 8000);
+			connected = true;
 			this.pw = new PrintWriter(s.getOutputStream());
 			this.br = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			
@@ -53,5 +56,10 @@ public class Client extends Thread{
 		return numPlayers;
 	}
 
+	
+	public static void sendMessageToServer(String message){
+		pw.println(message);
+		pw.flush();
+	}
 	
 }

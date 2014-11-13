@@ -13,10 +13,10 @@ import java.util.List;
 public class SurvivalServer {
 	
 	List<PlayerThread> players; //a player's position in list is 1 minus it's id (first part of any message)
+	private boolean playing = false;
 	
 	public SurvivalServer(){
 		players = Collections.synchronizedList(new ArrayList<PlayerThread>());
-		int numPlayers = 0;
 		
 		try{
 			URL whatismyip = new URL("http://myip.dnsomatic.com/");
@@ -32,17 +32,18 @@ public class SurvivalServer {
 			System.out.println("Starting server...");
 			ServerSocket ss = new ServerSocket(8000);
 			System.out.println("Server running... waiting for players to join...");
-			while(numPlayers < 4){
-				numPlayers++;
+			while(players.size() < 4){
 				Socket s = ss.accept();
-				System.out.println(numPlayers + " joined...");
-				String tag = numPlayers + "-";
+				String tag = "PLAYER-" + Integer.toString(players.size() + 1);
 				PlayerThread pt = new PlayerThread(s, this, tag);
 				players.add(pt);
+				System.out.println(players.size() + " joined...");
+				
 				pt.start();
-				sendAll("JOINED - " + numPlayers);
+				sendAll("JOINED - " + players.size());
 			}
 			System.out.println("All players have joined.. game is starting..");
+			playing = true;
 		} catch (IOException e) {
 			System.out.println("Error connecting server. " + e.getMessage());
 		}
@@ -55,6 +56,30 @@ public class SurvivalServer {
 	
 	public void interpretMessage(String msg){
 		//parse through message and interpret what happens with it (i.e. who receives it / what )
+		
+		/*check if closed ------- we should eventually move this code to another 
+		function or class to make it more readable when we have like a million cases   */
+		String[] parts = msg.split("-");
+		if(parts[0].equals("PLAYER")){
+			if(parts[2].equals("CLOSE") || parts[2].equals("null")){
+				int index = (Integer.parseInt(parts[1]) -1);
+				players.get(index).send("CLOSE");
+				players.remove(index);
+				if(playing){
+					//notify other players that a player has left -------------------- still needs to be implemented
+					//note that this can't be as simple as just updating people's tags because it would message with 
+					//people's stats and stuff.
+					//should either do the work to transition over all stats, or just end the game.
+				}else{
+					sendAll("JOINED - " + players.size());
+					//update tags
+					for(int i = 0; i < players.size(); i++){
+						players.get(i).updateTag(Integer.toString(i+1));
+					}
+				}
+				
+			}
+		}
 	}
 	
 	public void sendAll(String message){
