@@ -26,7 +26,7 @@ public class LoadingState extends States {
 		
 		manager = gameStates;
 		try{
-			background = ImageIO.read(new File("src/test.jpg"));
+			background = ImageIO.read(new File("src/resources/backgrounds/test.jpg"));
 			RescaleOp op = new RescaleOp(.3f, 0, null);
 		    background = op.filter(background, null);
 		}
@@ -51,7 +51,7 @@ public class LoadingState extends States {
 	public void draw(Graphics2D g) {
 		// TODO Auto-generated method stub
 		g.drawImage(background, 0, 0, null);
-		int coordX[] = {300, 500, 500, 300};
+		int coordX[] = {220, 420, 420, 220};
 		int coordY[] = {100, 100, 200, 200};
 		Polygon dialog = new Polygon(coordX, coordY, coordX.length);
 		g.setColor(Color.BLACK);
@@ -59,19 +59,19 @@ public class LoadingState extends States {
 		g.setColor(Color.GRAY);
 		g.fillPolygon(dialog);
 		g.setColor(Color.BLACK);
-		g.drawString("Waiting...", 380, 140);
+		g.drawString("Waiting...", 300, 140);
 		String temp = manager.getClient().getnumPlayers();
 		if(temp.equals("Error Connecting")){
 			temp = "Error Connecting";
-			g.drawString(temp, 350, 160);
-			g.drawString("Return to Menu?", 350, 180);
+			g.drawString(temp, 275, 160);
+			g.drawString("Return to Menu?", 277, 180);
 			g.setColor(Color.WHITE);
-			g.drawString("Ok", 390, 400);
+			g.drawString("Ok", 310, 400);
 		}
 		else if(temp!=null){
 			temp += "/4";
-			g.drawString(temp, 368, 160);
-			g.drawString("Cancel", 380, 400);
+			g.drawString(temp, 288, 160);
+			g.drawString("Cancel", 330, 400);
 		}
 	
 		

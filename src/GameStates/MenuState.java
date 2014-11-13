@@ -17,7 +17,7 @@ public class MenuState extends States {
 	public MenuState(GameStates gsm){
 		manager = gsm;
 		try{
-			background = ImageIO.read(new File("src/test.jpg"));
+			background = ImageIO.read(new File("src/resources/backgrounds/test.jpg"));
 		}
 		catch(Exception e){
 			e.printStackTrace();
