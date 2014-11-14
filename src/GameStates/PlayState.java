@@ -1,12 +1,13 @@
 package GameStates;
 
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 
 import Map.TileMap;
 
 public class PlayState extends States{
 	
-	TileMap map = new TileMap(30);
+	TileMap map;
 	
 	public PlayState(){
 		
@@ -14,6 +15,8 @@ public class PlayState extends States{
 
 	@Override
 	public void init() {
+		map = new TileMap(30);
+		map.loadTiles("src/resources/tilesets/grasstileset.gif");
 		map.loadMap("src/resources/maps/level1-1.map");
 	}
 
@@ -30,8 +33,16 @@ public class PlayState extends States{
 
 	@Override
 	public void keyPressed(int k) {
-		// TODO Auto-generated method stub
-		
+		//movement 
+		if(k == KeyEvent.VK_UP){
+			
+		}else if(k == KeyEvent.VK_RIGHT){
+			
+		}else if(k == KeyEvent.VK_DOWN){
+			
+		}else if(k == KeyEvent.VK_LEFT){
+			
+		}
 	}
 
 	@Override

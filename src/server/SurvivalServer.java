@@ -75,7 +75,7 @@ public class SurvivalServer {
 					sendAll("JOINED - " + players.size());
 					//update tags
 					for(int i = 0; i < players.size(); i++){
-						players.get(i).updateTag(Integer.toString(i+1));
+						players.get(i).updateTag("PLAYER-" + Integer.toString(i+1));
 					}
 				}
 				
