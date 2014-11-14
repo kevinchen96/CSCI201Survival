@@ -43,6 +43,7 @@ public class SurvivalServer {
 				sendAll("JOINED - " + players.size());
 			}
 			System.out.println("All players have joined.. game is starting..");
+			sendAll("START");
 			playing = true;
 		} catch (IOException e) {
 			System.out.println("Error connecting server. " + e.getMessage());

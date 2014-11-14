@@ -24,11 +24,6 @@ public class Client extends Thread{
 			
 			this.start(); //start the thread (run method)
 			
-			/*while(true){ //start listening for messages to send to other clients
-				String line = scan.nextLine();
-				pw.println(line);
-				pw.flush();
-			}*/
 		} catch (Exception e) {
 			numPlayers = "Error Connecting";
 		}  

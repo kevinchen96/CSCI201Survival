@@ -20,7 +20,7 @@ public class TileMap {
 	private int numTilesAcross;
 	Tile[][] tiles;
 	
-	TileMap(int tileSize){
+	public TileMap(int tileSize){
 		this.tileSize = tileSize;
 		numRowsToDraw = GamePanel.HEIGHT / tileSize + 2;
 		numColsToDraw = GamePanel.WIDTH / tileSize + 2;
