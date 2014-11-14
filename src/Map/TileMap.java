@@ -48,19 +48,23 @@ public class TileMap {
 	public void loadMap(String s){
 		try {
 			BufferedReader mapReader = new BufferedReader(new FileReader(new File(s)));
-			numCols = Integer.parseInt(mapReader.readLine());
-			numRows= Integer.parseInt(mapReader.readLine());
+			numCols = 0;
+			numRows = 0;
+			
 			map = new int[numRows][numCols];
+			
+			String line =  mapReader.readLine(); 
+			while(line != null){				
+				String[] parts = line.split(" ");
+				if(numCols < parts.length) numCols = parts.length;
+				for(int i = 0; i < numCols; i++){
+					map[numRows][i] = Integer.parseInt(parts[i]);
+				}
+				numRows++;
+			}
+		
 			width = numCols * tileSize;
 			height = numRows * tileSize;
-			
-			for(int row = 0; row < numRows; row++){
-				String line = mapReader.readLine();
-				String[] parts = line.split(" ");
-				for(int col = 0; col < numCols; col++){
-					map[row][col] = Integer.parseInt(parts[col]);
-				}
-			}
 		} catch (Exception e) {
 			System.out.println("<In TileMap loadMap()> Bad/Missing map file:  " + e.getMessage());
 		}
