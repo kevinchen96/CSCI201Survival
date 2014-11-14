@@ -62,7 +62,7 @@ public class LoadingState extends States {
 		g.drawString("Waiting...", 300, 140);
 		String temp = manager.getClient().getnumPlayers();
 		if(temp == null){
-			System.out.println("Hi");
+			//System.out.println("Hi");
 		}
 		else if(temp.equals("Error Connecting")){
 			temp = "Error Connecting";

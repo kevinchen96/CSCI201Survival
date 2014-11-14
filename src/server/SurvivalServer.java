@@ -40,10 +40,10 @@ public class SurvivalServer {
 				System.out.println(players.size() + " joined...");
 				
 				pt.start();
-				sendAll("JOINED - " + players.size());
+				sendAll("JOINED-" + players.size());
 			}
 			System.out.println("All players have joined.. game is starting..");
-			sendAll("START");
+			sendAll("START-");
 			playing = true;
 		} catch (IOException e) {
 			System.out.println("Error connecting server. " + e.getMessage());
@@ -72,7 +72,7 @@ public class SurvivalServer {
 					//people's stats and stuff.
 					//should either do the work to transition over all stats, or just end the game.
 				}else{
-					sendAll("JOINED - " + players.size());
+					sendAll("JOINED-" + players.size());
 					//update tags
 					for(int i = 0; i < players.size(); i++){
 						players.get(i).updateTag("PLAYER-" + Integer.toString(i+1));

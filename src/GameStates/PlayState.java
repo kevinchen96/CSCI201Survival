@@ -15,9 +15,10 @@ public class PlayState extends States{
 
 	@Override
 	public void init() {
-		map = new TileMap(30);
+		/*map = new TileMap(30);
 		map.loadTiles("src/resources/tilesets/grasstileset.gif");
 		map.loadMap("src/resources/maps/level1-1.map");
+		*/
 	}
 
 	@Override
@@ -30,7 +31,7 @@ public class PlayState extends States{
 	public void draw(Graphics2D g) {
 		// TODO Auto-generated method stub
 		g.drawString("In PlayState", 277, 180);
-		map.render(g);
+		//map.render(g);
 	}
 
 	@Override
