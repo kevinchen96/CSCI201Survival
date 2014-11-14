@@ -11,7 +11,7 @@ public class Client extends Thread{
 
 	private static PrintWriter pw;
 	private BufferedReader br;
-	private String numPlayers;
+	private String numPlayers, start;
 	public static boolean connected;
 	
 	public Client(String hostName) {
@@ -35,8 +35,11 @@ public class Client extends Thread{
 				while(true){
 					String line = br.readLine();
 					System.out.println(line);
-					if(line.substring(0, 6).equals("JOINED")){
+					if(line.split("-")[0].equals("JOINED")){
 						numPlayers = line;
+					}
+					else if(line.split("-")[0].equals("START")){
+						start = line;
 					}
 				}
 			} catch (IOException e) {
@@ -49,7 +52,10 @@ public class Client extends Thread{
 		// TODO Auto-generated method stub
 		return numPlayers;
 	}
-
+	
+	public String checkStart(){
+		return start;
+	}
 	
 	public static void sendMessageToServer(String message){
 		pw.println(message);

@@ -15,7 +15,7 @@ public class GameStates {
 		currentState = MenuState;
 		states.add(new MenuState(this));
 		states.add(new LoadingState(this));
-		
+		states.add(new PlayState(this));
 	}
 	public void setState(int s){
 		currentState = s;

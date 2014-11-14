@@ -81,8 +81,13 @@ public class MenuState extends States {
 		// TODO Auto-generated method stub
 		if(current == 0){
 			String ip = JOptionPane.showInputDialog("Enter IP Address");
-			manager.setClient(new Client(ip));
-			manager.setState(1);
+			if(ip == null){
+				manager.setState(0);
+			}
+			else{
+				manager.setClient(new Client(ip));
+				manager.setState(1);
+			}
 		}
 		
 	}

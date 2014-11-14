@@ -61,7 +61,10 @@ public class LoadingState extends States {
 		g.setColor(Color.BLACK);
 		g.drawString("Waiting...", 300, 140);
 		String temp = manager.getClient().getnumPlayers();
-		if(temp.equals("Error Connecting")){
+		if(temp == null){
+			System.out.println("Hi");
+		}
+		else if(temp.equals("Error Connecting")){
 			temp = "Error Connecting";
 			g.drawString(temp, 275, 160);
 			g.drawString("Return to Menu?", 277, 180);
@@ -73,7 +76,10 @@ public class LoadingState extends States {
 			g.drawString(temp, 288, 160);
 			g.drawString("Cancel", 330, 400);
 		}
-	
+		String checkStart = manager.getClient().checkStart();
+		if(checkStart!=null){
+			manager.setState(2);
+		}
 		
 		
 	}
