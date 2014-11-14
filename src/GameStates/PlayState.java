@@ -2,12 +2,19 @@ package GameStates;
 
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import Map.TileMap;
 
 public class PlayState extends States{
 	
 	TileMap map;
+	BufferedImage background;
 	
 	public PlayState(GameStates gameStates){
 		manager = gameStates;
@@ -15,10 +22,14 @@ public class PlayState extends States{
 
 	@Override
 	public void init() {
-		/*map = new TileMap(30);
+		map = new TileMap(30);
 		map.loadTiles("src/resources/tilesets/grasstileset.gif");
 		map.loadMap("src/resources/maps/level1-1.map");
-		*/
+		try {
+			background = ImageIO.read(new File("src/resources/backgrounds/grassbg1.gif"));
+		} catch (IOException e) {
+			System.out.println("Error with background in playstate: " + e.getMessage());
+		}
 	}
 
 	@Override
@@ -30,8 +41,9 @@ public class PlayState extends States{
 	@Override
 	public void draw(Graphics2D g) {
 		// TODO Auto-generated method stub
+		g.drawImage(background, 0, 0, null );
 		g.drawString("In PlayState", 277, 180);
-		//map.render(g);
+		map.render(g);
 	}
 
 	@Override
