@@ -89,6 +89,7 @@ public class LoadingState extends States {
 		// TODO Auto-generated method stub
 		if(k == KeyEvent.VK_ENTER){
 			manager.setState(0);
+			Client.sendMessageToServer("CLOSE");
 		}
 	}
 

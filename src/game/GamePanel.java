@@ -16,28 +16,28 @@ import GameStates.Client;
 import GameStates.GameStates;
 
 public class GamePanel extends JPanel  implements Runnable, KeyListener {
-	private static String TITLE = new String("SUVIVAL");
+	private static String TITLE = new String("SURVIVAL");
 	private static JFrame FRAME = new JFrame(TITLE);
-	public static int WIDTH = 320;
-	public static int HEIGHT = 240;
 	public static int SCALE = 2;
+	private static int WIDTH = 320 * SCALE;
+	private static int HEIGHT = 240 * SCALE;
 	private Graphics2D g;
 	private BufferedImage image;
 	private GameStates manager;
 	
 	public GamePanel(){
 		
-		image = new BufferedImage(WIDTH*SCALE, HEIGHT*SCALE, BufferedImage.TYPE_INT_RGB);
+		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		g = (Graphics2D) image.getGraphics();
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		manager = new GameStates();
 		
-		FRAME.setSize(WIDTH*SCALE, HEIGHT*SCALE);
+		FRAME.setSize(WIDTH, HEIGHT);
 		FRAME.setResizable(false);
 		FRAME.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		FRAME.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				int confirm = JOptionPane.showOptionDialog(null, "Are You Sure to Exit??", "Exit Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+				int confirm = JOptionPane.showOptionDialog(null, "Are You Sure to Exit?", "Exit Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
                 if (confirm == 0) {
                 	FRAME.setVisible(false);
                 	if(Client.connected){
@@ -108,6 +108,14 @@ public class GamePanel extends JPanel  implements Runnable, KeyListener {
 		
 	}
 	
+	public static int gameWidth(){
+		return WIDTH;
+	}
+	
+	public static int gameHeight(){
+		return HEIGHT;
+	}
+	
 	public void keyTyped(KeyEvent e) {
 		
 	}
@@ -123,4 +131,5 @@ public class GamePanel extends JPanel  implements Runnable, KeyListener {
 	public static void main(String[] args){
 		new GamePanel();
 	}
+	
 }

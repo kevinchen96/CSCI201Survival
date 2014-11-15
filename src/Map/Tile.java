@@ -5,6 +5,8 @@ import java.awt.image.BufferedImage;
 public class Tile {
 	private BufferedImage image;
 	private int type;
+	
+	//tile types
 	public static final int NORMAL = 0;
 	public static final int BLOCKED = 1;
 	

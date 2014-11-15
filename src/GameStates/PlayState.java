@@ -1,9 +1,12 @@
 package GameStates;
 
+import game.GamePanel;
+
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,7 +17,7 @@ import Map.TileMap;
 public class PlayState extends States{
 	
 	TileMap map;
-	BufferedImage background;
+	Image background;
 	
 	public PlayState(GameStates gameStates){
 		manager = gameStates;
@@ -26,7 +29,9 @@ public class PlayState extends States{
 		map.loadTiles("src/resources/tilesets/grasstileset.gif");
 		map.loadMap("src/resources/maps/level1-1.map");
 		try {
-			background = ImageIO.read(new File("src/resources/backgrounds/grassbg1.gif"));
+			BufferedImage temp;
+			temp = ImageIO.read(new File("src/resources/backgrounds/grassbg1.gif"));
+			background = temp.getScaledInstance(GamePanel.gameWidth(), GamePanel.gameHeight(), Image.SCALE_SMOOTH);
 		} catch (IOException e) {
 			System.out.println("Error with background in playstate: " + e.getMessage());
 		}
@@ -40,9 +45,14 @@ public class PlayState extends States{
 
 	@Override
 	public void draw(Graphics2D g) {
-		// TODO Auto-generated method stub
+		//clear screen
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, GamePanel.gameWidth(), GamePanel.gameHeight());
+		
+		//draw background
 		g.drawImage(background, 0, 0, null );
-		g.drawString("In PlayState", 277, 180);
+
+		//draw map
 		map.render(g);
 	}
 
