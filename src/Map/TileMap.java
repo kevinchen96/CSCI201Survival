@@ -18,10 +18,12 @@ public class TileMap {
 	private int colOffset, rowOffset;
 	private BufferedImage tileSet; //tileSet
 	private int numTilesAcross;
+	private int actualTileSize;
 	Tile[][] tiles;
 	
 	public TileMap(int tileSize){
-		this.tileSize = tileSize;
+		this.actualTileSize = tileSize;
+		this.tileSize = tileSize * GamePanel.SCALE;
 		numRowsToDraw = GamePanel.gameHeight() / tileSize + 2;
 		numColsToDraw = GamePanel.gameWidth() / tileSize + 2;
 		
@@ -30,13 +32,13 @@ public class TileMap {
 	public void loadTiles(String s){
 		try{
 			tileSet = ImageIO.read(new File(s));
-			numTilesAcross = tileSet.getWidth() / tileSize;
+			numTilesAcross = tileSet.getWidth() / actualTileSize;
 			tiles =  new Tile[2][numTilesAcross];
 			BufferedImage subImage;
 			for(int col = 0; col < numTilesAcross; col++){
-				subImage = tileSet.getSubimage(col*tileSize, 0, tileSize, tileSize);
+				subImage = tileSet.getSubimage(col*actualTileSize, 0, actualTileSize, actualTileSize);
 				tiles[0][col] = new Tile(subImage, Tile.NORMAL);
-				subImage = tileSet.getSubimage(col*tileSize, tileSize, tileSize, tileSize);
+				subImage = tileSet.getSubimage(col*actualTileSize, actualTileSize, actualTileSize, actualTileSize);
 				tiles[1][col] = new Tile(subImage, Tile.BLOCKED);
 
 			}

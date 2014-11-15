@@ -1,9 +1,12 @@
 package Map;
 
+import game.GamePanel;
+
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 public class Tile {
-	private BufferedImage image;
+	private Image image;
 	private int type;
 	
 	//tile types
@@ -11,11 +14,15 @@ public class Tile {
 	public static final int BLOCKED = 1;
 	
 	Tile(BufferedImage image, int type){
-		this.image = image;
+		int scalar = GamePanel.SCALE;	
+		int w = image.getWidth();
+		int h = image.getHeight();
+		this.image = image.getScaledInstance(scalar*w, scalar*h, Image.SCALE_SMOOTH);
+		
 		this.type = type;
 	}
 	
-	public BufferedImage getImage(){
+	public Image getImage(){
 		return image;
 	}
 	
