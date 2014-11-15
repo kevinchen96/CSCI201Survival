@@ -34,13 +34,14 @@ public class Client extends Thread{
 			try {
 				while(true){
 					String line = br.readLine();
-					System.out.println(line);
 					if(line.split("-")[0].equals("JOINED")){
 						System.out.println("Hi");
 						numPlayers = line;
 					}
 					else if(line.split("-")[0].equals("START")){
 						start = line;
+					}else{
+						GameStates.recieveMessage(line);
 					}
 				}
 			} catch (IOException e) {

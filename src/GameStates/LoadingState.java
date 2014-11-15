@@ -94,4 +94,10 @@ public class LoadingState extends States {
 
 	}
 
+	@Override
+	public void interpretMessage(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

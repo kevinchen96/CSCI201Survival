@@ -4,9 +4,9 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 public class GameStates {
-	private ArrayList<States> states;
+	private static ArrayList<States> states;
 	private Client user;
-	public int currentState;
+	public static int currentState;
 	public int MenuState = 0;
 	public int LoadingState = 1;
 	
@@ -38,5 +38,11 @@ public class GameStates {
 	}
 	public Client getClient(){
 		return user;
+	}
+	
+	public static void recieveMessage(String message){
+		if(states != null){
+			states.get(currentState).interpretMessage(message);
+		}	
 	}
 }

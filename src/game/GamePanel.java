@@ -131,5 +131,12 @@ public class GamePanel extends JPanel  implements Runnable, KeyListener {
 	public static void main(String[] args){
 		new GamePanel();
 	}
+
+
+	public static void addChatWindow(JFrame chat) {
+		FRAME.setLocation(FRAME.getLocation().x, FRAME.getLocation().y-(chat.getHeight() - 50));
+		chat.setLocation(FRAME.getLocation().x, FRAME.getLocation().y + FRAME.getHeight()+20);
+		chat.setVisible(true);
+	}
 	
 }

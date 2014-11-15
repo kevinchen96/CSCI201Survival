@@ -61,6 +61,7 @@ public class SurvivalServer {
 		/*check if closed ------- we should eventually move this code to another 
 		function or class to make it more readable when we have like a million cases   */
 		String[] parts = msg.split("-");
+		System.out.println(msg);
 		if(parts[0].equals("PLAYER")){
 			if(parts[2].equals("CLOSE") || parts[2].equals("null")){
 				int index = (Integer.parseInt(parts[1]) -1);
@@ -79,6 +80,11 @@ public class SurvivalServer {
 					}
 				}
 				
+			}
+			else if(parts[2].equals("CHAT")){
+				if(parts[3].equals("ALL")){
+					sendAll("CHAT-" + parts[4]);
+				}
 			}
 		}
 	}

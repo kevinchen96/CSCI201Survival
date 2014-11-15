@@ -9,10 +9,6 @@ public abstract class States {
 	public abstract void draw(Graphics2D g);
 	public abstract void keyPressed(int k);
 	public abstract void keyReleased(int k);
-	
-	
-	public static void recieveMessage(String message){
-		
-	}
+	abstract public void interpretMessage(String message);
 	
 }
