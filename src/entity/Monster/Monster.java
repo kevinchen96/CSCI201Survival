@@ -1,4 +1,4 @@
-package Monster;
+package entity.Monster;
 
 public class Monster {
 	private String name;

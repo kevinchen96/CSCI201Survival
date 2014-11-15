@@ -59,8 +59,10 @@ public class Client extends Thread{
 	}
 	
 	public static void sendMessageToServer(String message){
-		pw.println(message);
-		pw.flush();
+		if(connected){
+			pw.println(message);
+			pw.flush();
+		}	
 	}
 	
 }

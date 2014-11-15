@@ -25,7 +25,7 @@ public class PlayState extends States{
 
 	@Override
 	public void init() {
-		map = new TileMap(30);
+		map = new TileMap(30); // parameter = square size of tiles (pixels)
 		map.loadTiles("src/resources/tilesets/grasstileset.gif");
 		map.loadMap("src/resources/maps/level1-1.map");
 		try {
@@ -61,20 +61,20 @@ public class PlayState extends States{
 
 		//movement 
 		if(k == KeyEvent.VK_UP){
-			
+			System.out.println("up");
 		}else if(k == KeyEvent.VK_RIGHT){
-			
+			System.out.println("right");
 		}else if(k == KeyEvent.VK_DOWN){
-			
+			System.out.println("down");
 		}else if(k == KeyEvent.VK_LEFT){
-			
+			System.out.println("left");
 		}
 	}
 
 	@Override
 	public void keyReleased(int k) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 }

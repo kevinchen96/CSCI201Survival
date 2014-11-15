@@ -1,23 +1,28 @@
 package GameStates;
 
+import game.GamePanel;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.awt.image.RescaleOp;
 import java.io.File;
 
 import javax.imageio.ImageIO;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class MenuState extends States {
 	private int current = 0;
 	private String[] types = {"Play", "Help", "Exit"};
-	private BufferedImage background;
+	private Image background;
 	public MenuState(GameStates gsm){
 		manager = gsm;
 		try{
-			background = ImageIO.read(new File("src/resources/backgrounds/test.jpg"));
+			BufferedImage temp = ImageIO.read(new File("src/resources/backgrounds/test.jpg"));
+			background = temp.getScaledInstance(GamePanel.gameWidth(), GamePanel.gameHeight(), Image.SCALE_SMOOTH);
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -63,7 +68,6 @@ public class MenuState extends States {
 			choose();
 		}
 		else if(k == KeyEvent.VK_UP){
-			System.out.println("HI");
 			current--;
 			if(current == -1){
 				current = 2;
@@ -88,6 +92,13 @@ public class MenuState extends States {
 				manager.setClient(new Client(ip));
 				manager.setState(1);
 			}
+		}else if(current == 1){
+			JDialog about = new JDialog(new JFrame(), "About", true);
+			about.setSize(400, 400);
+			about.setLocationRelativeTo(null);
+			about.setVisible(true);
+		}else{
+			System.exit(0);
 		}
 		
 	}

@@ -1,23 +1,19 @@
 package GameStates;
 
-import java.awt.BorderLayout;
+import game.GamePanel;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.awt.image.RescaleOp;
 import java.io.File;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 public class LoadingState extends States {
-	private BufferedImage background;
+	private Image background;
 
 	public LoadingState(GameStates gameStates) {
 		// TODO Auto-generated constructor stub
@@ -26,9 +22,8 @@ public class LoadingState extends States {
 		
 		manager = gameStates;
 		try{
-			background = ImageIO.read(new File("src/resources/backgrounds/test.jpg"));
-			RescaleOp op = new RescaleOp(.3f, 0, null);
-		    background = op.filter(background, null);
+			BufferedImage temp = ImageIO.read(new File("src/resources/backgrounds/test.jpg"));
+			background = temp.getScaledInstance(GamePanel.gameWidth(), GamePanel.gameHeight(), Image.SCALE_SMOOTH);
 		}
 		catch(Exception e){
 			e.printStackTrace();
