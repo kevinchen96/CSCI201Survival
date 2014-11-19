@@ -81,10 +81,11 @@ public class PlayState extends States{
 					String message = jtf.getText();
 					message = message.replace('-', '~');
 					message = message.replace('"','\"');
+					if(!message.equals("")){
+						Client.sendMessageToServer("CHAT-" + "ALL-" + message);
+						jtf.setText("");
+					}
 					
-					
-					Client.sendMessageToServer("CHAT-" + "ALL-" + message);
-					jtf.setText("");
 				}
 			}
 		});
@@ -180,7 +181,7 @@ public class PlayState extends States{
 
 	public void interpretMessage(String message) {
 		if(message.split("-")[0].equals("CHAT")){
-			chatArea.setText(chatArea.getText()+"\n"+message.split("-")[1]);
+			chatArea.setText(chatArea.getText() + "\n" + message.split("-")[1]);
 			try {
 				chatArea.setCaretPosition(chatArea.getDocument().getLength());
 				jsp.scrollRectToVisible(chatArea.modelToView(chatArea.getDocument().getLength()));
