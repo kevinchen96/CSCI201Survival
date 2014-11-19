@@ -1,8 +1,18 @@
-package entity.player;
+package Entity.player;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 
-public class Player {
+import javax.imageio.ImageIO;
+
+import Entity.Animation;
+import Map.TileMap;
+import Spritesheet.MapObject;
+
+public class Player extends MapObject{
 	private int health, thirst, hunger, strength, defense;  //bars
+	private int currHealth, currThirst, currHunger;
 	private int healthRate, thirstRate, hungerRate; //rates
 	private int expHealth, expThirst, expHunger; //amount of experience gained for each bar
 	private int maxBag, maxEq; //max number of items bag and equipment can store
@@ -12,23 +22,154 @@ public class Player {
 	private ArrayList<String> Bag; //bag used to store items (change to type item when made)
 	private ArrayList<String> Equipment; //Equipment such as weapons, armors, boots
 	private ArrayList<String> Inventory;
-	private int moveSpeed; //movement speed
-	private int positionX; //position in the x-coordinates
-	private int positionY; //position in the y-coordinates
+	private double moveSpeed; //movement speed
 	private boolean maxLevel; //true if level is at its max
+	private boolean idle, walking, slash, dead;
+	private ArrayList<ArrayList<BufferedImage[]>> sprites;
+	private final int[] numFrames = {1, 9, 6, 6};
+	public int IDLE = 0;
+	public int WALKING = 1;
+	public int SLASH = 2;
+	public int DIE = 3;
 	
+	public int UP = 0; 
+	public int LEFT = 1;
+	public int DOWN = 2;
+	public int RIGHT = 3;
 	
-	public Player(){
+	public Player(TileMap tm){
+		super(tm);
 		health = 768;
+		currHealth = health;
 		thirst = 700;
+		currThirst = thirst;
 		hunger = 600;
+		currHunger = hunger;
 		strength = 50;
+		moveSpeed = .3;
 		Bag = new ArrayList<String>();
 		Equipment = new ArrayList<String>();
 		//inventory?
 		level = 0;
 		maxLevel = false;
+		dead = false;
+		BufferedImage spritesheet;
+		try {
+			//BufferedImage spritesheet = ImageIO.read(this.getClass().getResourceAsStream("char1.png"));
+			spritesheet = ImageIO.read(new File("src/char1.png"));
+			sprites = new ArrayList<ArrayList<BufferedImage[]>>();
+			for (int i = 0; i < 4 ; i++) {
+				ArrayList<BufferedImage[]> hi = new ArrayList<BufferedImage[]>();
+				sprites.add(hi);
+				for(int j = 0; j < 4; j++){
+					BufferedImage[] bi = new BufferedImage[numFrames[j]];
+					sprites.get(i).add(bi);
+				}
+			}
+			for(int i = 0; i < 4; i++){
+				for (int j = 0; j < numFrames[0]; j++) {
+					(sprites.get(i).get(0))[j] = spritesheet.getSubimage(j*64, (i+8)*64, 64, 64);
+				}
+				for(int j = 0; j < numFrames[1]; j++){
+					(sprites.get(i).get(1))[j] = spritesheet.getSubimage(j*64, (i+8)*64, 64, 64);
+				}
+				for(int j = 0; j < numFrames[2]; j++){
+					(sprites.get(i).get(2))[j] = spritesheet.getSubimage(j*64, (i+12)*64, 64, 64);
+				}
+				for(int j = 0; j < numFrames[3]; j++){
+					(sprites.get(i).get(3))[j] = spritesheet.getSubimage(j*64, 20*64, 64, 64);
+				}
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		animation = new Animation();
+		currentAction = IDLE;
+		currentDirection = 3;
+		animation.setFrames(sprites.get(currentDirection).get(IDLE));	
+		animation.setDelay(50);
 	}
+	public void getNextPosition(){
+		if(walking){
+			if(currentDirection == LEFT){
+				dx = -1*moveSpeed;
+				dy = 0;
+			}
+			else if(currentDirection == DOWN){
+				dy = moveSpeed;
+				dx = 0;
+			}
+			else if(currentDirection == RIGHT){
+				dx = moveSpeed;
+				dy = 0;
+			}
+			else if(currentDirection == UP){
+				dy = -1*moveSpeed;
+				dx = 0;
+			}
+		}
+		else{
+			dx = 0;
+			dy = 0;
+		}
+	}
+	
+	public void update(){
+		getNextPosition();
+		checkTileMapCollision();
+		setPosition(xtemp, ytemp);
+		System.out.println(currentDirection);
+		System.out.println(xtemp + " " + ytemp);
+		if(idle){
+			System.out.println("IDLE");			
+			if(currentAction != IDLE){
+				currentAction = IDLE;
+				animation.setFrames(sprites.get(currentDirection).get(IDLE));
+				animation.setDelay(50);
+			}
+		}
+		else if(walking){
+			System.out.println("Walking");
+			if(currentAction != WALKING){
+				currentAction = WALKING;
+				System.out.println(currentDirection);
+				animation.setFrames(sprites.get(currentDirection).get(WALKING));
+				animation.setDelay(50);
+			}
+		}
+		else if(slash){
+			if(currentAction != SLASH){
+				currentAction = SLASH;
+				animation.setFrames(sprites.get(currentDirection).get(SLASH));
+				animation.setDelay(50);
+			}
+		}
+		else if(dead){
+			if(currentAction != DIE){
+				currentAction = DIE;
+				animation.setFrames(sprites.get(currentDirection).get(DIE));
+				animation.setDelay(50);
+			}
+		}
+		animation.update();
+	}
+	
+	public void draw(Graphics2D g){
+		setMapPosition();
+		g.drawImage(animation.getImage(), (int)(x + xmap - 32), (int)(y + ymap - 32), null);
+	}
+	public void updateHealthC(int x){
+		currHealth+=x;
+	}
+	public void updateThirstC(int x){
+		currThirst+=x;
+	}
+	public void updateHungerC(int x){
+		currHunger+=x;
+	}
+
 	
 	// updating bars
 	public void updateHealth(int x){
@@ -68,6 +209,10 @@ public class Player {
 			updateHealth(expHealth*expRatio);
 			updateThirst(expThirst*expRatio);
 			updateHunger(expHunger*expRatio);
+			updateHealthC(expHealth*expRatio);
+			updateThirstC(expThirst*expRatio);
+			updateHungerC(expHunger*expRatio);
+			
 		}
 		updateHealthXP(-1*(expHealth));
 		updateThirstXP(-1*(expThirst));
@@ -75,12 +220,7 @@ public class Player {
 		
 	}
 	
-	//updating position
-	public void updatePosition(int dx, int dy){
-		positionX+=dx;
-		positionY+=dy;
-	}
-
+	
 	//updating items in Bag
 	public void updateAddBag(String item){
 		if(Bag.size()!=maxBag){
@@ -137,6 +277,15 @@ public class Player {
 	public int getLevel(){
 		return level;
 	}
+	public int getHealthC(){
+		return currHealth;
+	}
+	public int getThirstC(){
+		return currThirst;
+	}
+	public int getHungerC(){
+		return currHunger;
+	}
 	
 	//get rates
 	public int gethealthRate(){
@@ -160,12 +309,20 @@ public class Player {
 		return expThirst;
 	}
 	
-	//get position
-	public int getPositionX(){
-		return positionX;
+	public void setIdle(boolean b){
+		idle = b;
 	}
-	public int getPositionY(){
-		return positionY;
+	public void setWalking(boolean b){
+		walking = b;
+	}
+	public void setSlash(boolean b){
+		slash = b;
+	}
+	public void setDead(boolean b){
+		dead = b;
+	}
+	public boolean getDead(){
+		return dead;
 	}
 	
 }

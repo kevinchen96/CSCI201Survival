@@ -78,7 +78,7 @@ public class GamePanel extends JPanel  implements Runnable, KeyListener {
 				updates++;
 			}
 			render();
-			drawToScreen();
+			//drawToScreen();
 			frames++;
 			if((System.currentTimeMillis() - timer) > 1000){
 				timer+= 1000;

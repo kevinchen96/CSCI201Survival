@@ -1,8 +1,9 @@
 package Spritesheet;
 
-import Main.GamePanel;
-import TileMap.TileMap;
-import TileMap.Tile;
+import Entity.Animation;
+import Map.TileMap;
+import Map.Tile;
+import game.GamePanel;
 
 import java.awt.Rectangle;
 
@@ -41,13 +42,10 @@ public abstract class MapObject {
 	protected boolean bottomRight;
 	
 	// animation
-	protected SpriteSheetLoader animation;
+	protected Animation animation;
 	protected int currentAction;
 	protected int previousAction;
-	protected boolean facingRight;
-	protected boolean facingLeft;
-	protected boolean facingUp;
-	protected boolean facingDown;
+	protected int currentDirection;
 	
 	// movement
 	protected boolean left;
@@ -87,10 +85,10 @@ public abstract class MapObject {
 		int topTile = (int)(y - cheight / 2) / tileSize;
 		int bottomTile = (int)(y + cheight / 2 - 1) / tileSize;
 		
-		int tl = tileMap.getType(topTile, leftTile);
-		int tr = tileMap.getType(topTile, rightTile);
-		int bl = tileMap.getType(bottomTile, leftTile);
-		int br = tileMap.getType(bottomTile, rightTile);
+		int tl = tileMap.getTypeOfTileAt(topTile, leftTile);
+		int tr = tileMap.getTypeOfTileAt(topTile, rightTile);
+		int bl = tileMap.getTypeOfTileAt(bottomTile, leftTile);
+		int br = tileMap.getTypeOfTileAt(bottomTile, rightTile);
 		
 		topLeft = tl == Tile.BLOCKED;
 		topRight = tr == Tile.BLOCKED;
@@ -123,7 +121,6 @@ public abstract class MapObject {
 		if(dy > 0) {
 			if(bottomLeft || bottomRight) {
 				dy = 0;
-				falling = false;
 				ytemp = (currRow + 1) * tileSize - cheight / 2;
 			}
 			else {
@@ -171,20 +168,17 @@ public abstract class MapObject {
 	}
 	
 	public void setMapPosition() {
-		xmap = tileMap.getx();
-		ymap = tileMap.gety();
+		xmap = tileMap.getX();
+		ymap = tileMap.getY();
 	}
 	
-	public void setLeft(boolean b) { left = b; }
-	public void setRight(boolean b) { right = b; }
-	public void setUp(boolean b) { up = b; }
-	public void setDown(boolean b) { down = b; }
+	public void setCurrDir(int x) { currentDirection = x; }
 	
 	public boolean notOnScreen() {
 		return x + xmap + width < 0 ||
-			x + xmap - width > GamePanel.WIDTH ||
+			x + xmap - width > GamePanel.gameWidth() ||
 			y + ymap + height < 0 ||
-			y + ymap - height > GamePanel.HEIGHT;
+			y + ymap - height > GamePanel.gameHeight();
 	}
 	
 }

@@ -22,6 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 
+import Entity.player.Player;
 import Map.TileMap;
 
 public class PlayState extends States{
@@ -31,6 +32,7 @@ public class PlayState extends States{
 	private static JFrame chat;
 	private JTextArea chatArea;
 	private JScrollPane jsp;
+	private Player player;
 	
 	public PlayState(GameStates gameStates){
 		manager = gameStates;
@@ -41,6 +43,9 @@ public class PlayState extends States{
 		map = new TileMap(30); // parameter = square size of tiles (pixels)
 		map.loadTiles("src/resources/tilesets/grasstileset.gif");
 		map.loadMap("src/resources/maps/level1-1.map");
+		map.setPosition(0,0);
+		player = new Player(map);
+		player.setPosition(100,100);
 		try {
 			BufferedImage temp;
 			temp = ImageIO.read(new File("src/resources/backgrounds/grassbg1.gif"));
@@ -49,6 +54,7 @@ public class PlayState extends States{
 			System.out.println("Error with background in playstate: " + e.getMessage());
 		}
 		startChat();
+		
 	}
 
 	private void startChat() {
@@ -107,7 +113,7 @@ public class PlayState extends States{
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
@@ -121,6 +127,11 @@ public class PlayState extends States{
 
 		//draw map
 		map.render(g);
+		if(player == null) System.out.println("What");
+		
+		player.draw(g);
+		player.update();
+		map.setPosition(GamePanel.gameWidth()/2 - player.getx(), GamePanel.gameHeight()/2 - player.gety());
 	}
 
 	@Override
@@ -129,21 +140,41 @@ public class PlayState extends States{
 		//movement 
 		if(k == KeyEvent.VK_UP){
 			System.out.println("up");
-		}else if(k == KeyEvent.VK_RIGHT){
+			player.setCurrDir(0);
+			player.setWalking(true);
+		}if(k == KeyEvent.VK_RIGHT){
 			System.out.println("right");
-		}else if(k == KeyEvent.VK_DOWN){
+			player.setCurrDir(3);
+			player.setWalking(true);
+		}if(k == KeyEvent.VK_DOWN){
 			System.out.println("down");
-		}else if(k == KeyEvent.VK_LEFT){
+			player.setCurrDir(2);
+			player.setWalking(true);
+		}if(k == KeyEvent.VK_LEFT){
 			System.out.println("left");
-		}else if(k == KeyEvent.VK_ENTER){
+			player.setCurrDir(1);
+			player.setWalking(true);
+		}if(k == KeyEvent.VK_A){
+			player.setSlash(true);
+		}if(k == KeyEvent.VK_ENTER){
 			chat.requestFocus();
 		}
+		player.setIdle(false);
 	}
 
 	@Override
 	public void keyReleased(int k) {
 		// TODO Auto-generated method stub
-		
+		if(k == KeyEvent.VK_UP){
+			player.setWalking(false);	
+		}if(k == KeyEvent.VK_RIGHT){
+			player.setWalking(false);
+		}if(k == KeyEvent.VK_DOWN){
+			player.setWalking(false);
+		}if(k == KeyEvent.VK_LEFT){
+			player.setWalking(false);
+		}
+		player.setIdle(true);
 	}
 	
 

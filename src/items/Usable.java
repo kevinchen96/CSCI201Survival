@@ -2,7 +2,8 @@ package items;
 
 import java.awt.image.BufferedImage;
 
-import entity.player.Player;
+import Entity.player.Player;
+
 
 public class Usable extends Item{
 	

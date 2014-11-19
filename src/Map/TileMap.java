@@ -56,6 +56,11 @@ public class TileMap {
 			width = numCols * tileSize;
 			height = numRows * tileSize;
 			
+			xmin = GamePanel.gameWidth() - width;
+			xmax = 0;
+			ymin = GamePanel.gameHeight() - height;
+			ymax = 0;
+		
 			map = new int[numRows][numCols];
 			for(int row = 0; row < numRows; row++){	
 				String line = mapReader.readLine();
@@ -85,8 +90,8 @@ public class TileMap {
 	}
 	
 	public void setPosition(int x, int y){
-		this.x = (x - this.x);
-		this.y = (y - this.y);
+		this.x += (x - this.x);
+		this.y += (y - this.y);
 		fixBounds();
 		colOffset = (int) -this.x / tileSize;  //which row / col to start drawing
 		rowOffset = (int) -this.y / tileSize;
@@ -95,9 +100,9 @@ public class TileMap {
 	
 	private void fixBounds(){
 		if(x < xmin) x = xmin;
-		else if(x > xmax) x = xmax;
+		if(x > xmax) x = xmax;
 		if(y < ymin) y = ymin;
-		else if(y > ymax) y = ymax;
+		if(y > ymax) y = ymax;
 	}
 	
 	//Getters
