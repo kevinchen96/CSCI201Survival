@@ -2,6 +2,7 @@ package game;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -135,7 +136,8 @@ public class GamePanel extends JPanel  implements Runnable, KeyListener {
 
 	public static void addChatWindow(JFrame chat) {
 		FRAME.setLocation(FRAME.getLocation().x, FRAME.getLocation().y-(chat.getHeight() - 50));
-		chat.setLocation(FRAME.getLocation().x, FRAME.getLocation().y + FRAME.getHeight()+20);
+		chat.setLocation(FRAME.getLocation().x, FRAME.getLocation().y + FRAME.getHeight()+20);		
+		
 		chat.setVisible(true);
 	}
 	

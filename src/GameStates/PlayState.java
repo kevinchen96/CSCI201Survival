@@ -75,9 +75,11 @@ public class PlayState extends States{
 					String message = jtf.getText();
 					message = message.replace('-', '~');
 					message = message.replace('"','\"');
-					if(message.equals("")) message = " ";
-					Client.sendMessageToServer("CHAT-" + "ALL-" + message);
-					jtf.setText("");
+					if(!message.equals("")){
+						Client.sendMessageToServer("CHAT-" + "ALL-" + message);
+						jtf.setText("");
+					}
+					
 				}
 			}
 		});
