@@ -47,7 +47,7 @@ public class Player extends MapObject{
 		hunger = 600;
 		currHunger = hunger;
 		strength = 50;
-		moveSpeed = .3;
+		moveSpeed = 1;
 		Bag = new ArrayList<String>();
 		Equipment = new ArrayList<String>();
 		//inventory?
