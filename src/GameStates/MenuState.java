@@ -14,6 +14,8 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import message.Message;
+
 public class MenuState extends States {
 	private int current = 0;
 	private String[] types = {"Play", "Help", "Exit"};
@@ -109,8 +111,7 @@ public class MenuState extends States {
 		
 	}
 
-	@Override
-	public void interpretMessage(String message) {
+	public void interpretMessage(Message message) {
 		// TODO Auto-generated method stub
 		
 	}

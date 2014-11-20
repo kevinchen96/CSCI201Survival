@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import message.CloseMessage;
 import GameStates.Client;
 import GameStates.GameStates;
 
@@ -42,7 +43,7 @@ public class GamePanel extends JPanel  implements Runnable, KeyListener {
                 if (confirm == 0) {
                 	FRAME.setVisible(false);
                 	if(Client.connected){
-                		Client.sendMessageToServer("CLOSE");	
+                		Client.sendMessageToServer(new CloseMessage());	
                 	}
     				System.exit(0);
                 }
@@ -79,7 +80,7 @@ public class GamePanel extends JPanel  implements Runnable, KeyListener {
 				updates++;
 			}
 			render();
-			//drawToScreen();
+			drawToScreen();
 			frames++;
 			if((System.currentTimeMillis() - timer) > 1000){
 				timer+= 1000;

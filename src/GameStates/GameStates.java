@@ -3,6 +3,8 @@ package GameStates;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+import message.Message;
+
 public class GameStates {
 	private static ArrayList<States> states;
 	private Client user;
@@ -40,9 +42,7 @@ public class GameStates {
 		return user;
 	}
 	
-	public static void recieveMessage(String message){
-		if(states != null){
-			states.get(currentState).interpretMessage(message);
-		}	
+	public static void recieveMessage(Message message){
+		states.get(currentState).interpretMessage(message);
 	}
 }

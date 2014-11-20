@@ -1,29 +1,27 @@
 package server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import javax.swing.JOptionPane;
+import message.Message;
 
 public class PlayerThread extends Thread{
 
-	String tag;
-	PrintWriter playerWriter;
-	BufferedReader playerReader;
+	int index;
+	ObjectOutputStream oos;
+	ObjectInputStream ois;
 	SurvivalServer server;
 	private boolean running = true;
 	
-	public PlayerThread(Socket s, SurvivalServer ss, String tag) {
-		this.tag = tag;
+	public PlayerThread(Socket s, SurvivalServer ss, int index) {
+		this.index = index;
 		try{
-			playerWriter = new PrintWriter(s.getOutputStream());
-			playerReader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			oos = new ObjectOutputStream(s.getOutputStream());
+			ois = new ObjectInputStream(s.getInputStream());
 		}catch(Exception e){
-			System.out.println("Error getting " + tag + "'s streams: " + e.getMessage() );
+			System.out.println("Error getting " + index + "'s streams: " + e.getMessage() );
 		}
 		this.server = ss;
 	}
@@ -32,24 +30,37 @@ public class PlayerThread extends Thread{
 	public void run() {
 		while(running){
 			try {
-				String message = tag + "-" + playerReader.readLine();
-				server.interpretMessage(message);
+				Message msg;
+				try {
+					msg = (Message) ois.readObject();
+					msg.setIndex(index);
+					server.interpretMessage(msg);
+				} catch (ClassNotFoundException e) {
+					System.out.println("Class not found exception: " + e.getMessage()  );
+				}
+				
 			} catch (IOException e) {
-				System.out.println("ioexception reading message from " + tag + "'s reader: " + e.getMessage());
+				System.out.println("ioexception reading message from " + index + "'s reader: " + e.getMessage());
 			}
 		}
 	}
 	
-	public void send(String message){
-		if(message.equals("CLOSE")){
-			System.out.println("a player has left the game...");
-			running = false;
+	public void send(Message message){
+		try{
+			if(message.getType().equals("CLOSE")){
+				System.out.println("a player has left the game...");
+				running = false;
+			}else{
+				oos.writeObject(message);
+				oos.flush();
+			}			
+		}catch(Exception e){
+			System.out.println("Trouble sending message of type '" + message.getType() + "': " + e.getMessage() );
 		}
-		playerWriter.println(message);
-		playerWriter.flush();
+		
 	}
 	
-	public void updateTag(String tag){
-		this.tag = tag; 
+	public void updateIndex(int index){
+		this.index = index; 
 	}
 }

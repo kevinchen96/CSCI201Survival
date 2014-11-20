@@ -1,17 +1,16 @@
 package GameStates;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Scanner;
+
+import message.Message;
 
 public class Client extends Thread{
 
-	private static PrintWriter pw;
-	private BufferedReader br;
-	private String numPlayers, start;
+	private static ObjectOutputStream oos;
+	private ObjectInputStream ois;
 	public static boolean connected;
 	
 	public Client(String hostName) {
@@ -19,13 +18,13 @@ public class Client extends Thread{
 		try {
 			Socket s = new Socket(hostName, 8000);
 			connected = true;
-			this.pw = new PrintWriter(s.getOutputStream());
-			this.br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			this.oos = new ObjectOutputStream(s.getOutputStream());
+			this.ois = new ObjectInputStream(s.getInputStream());
 			
 			this.start(); //start the thread (run method)
 			
 		} catch (Exception e) {
-			numPlayers = "Error Connecting";
+			System.out.println("error in Client: " + e.getMessage());
 		}  
 	}
 	
@@ -33,36 +32,25 @@ public class Client extends Thread{
 		while(true){
 			try {
 				while(true){
-					String line = br.readLine();
-					if(line.split("-")[0].equals("JOINED")){
-						System.out.println("Hi");
-						numPlayers = line;
-					}
-					else if(line.split("-")[0].equals("START")){
-						start = line;
-					}else{
-						GameStates.recieveMessage(line);
-					}
+					Message msg = (Message) ois.readObject();
+					GameStates.recieveMessage(msg);
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				System.out.println("Trouble reading line in Chat Client: " + e.getMessage());
 			}
 		}
 	}
 
-	public String getnumPlayers() {
-		// TODO Auto-generated method stub
-		return numPlayers;
-	}
 	
-	public String checkStart(){
-		return start;
-	}
-	
-	public static void sendMessageToServer(String message){
+	public static void sendMessageToServer(Message message){
 		if(connected){
-			pw.println(message);
-			pw.flush();
+			try {
+				oos.writeObject(message);
+				oos.flush();
+			} catch (Exception e) {
+				System.out.println("Trouble sending message to server: " + e.getMessage());
+			}
+			
 		}	
 	}
 	

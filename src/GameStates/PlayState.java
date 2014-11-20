@@ -1,8 +1,5 @@
 package GameStates;
 
-import entity.player.Player;
-import game.GamePanel;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -22,7 +19,11 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 
+import message.ChatMessage;
+import message.Message;
 import Map.TileMap;
+import entity.player.Player;
+import game.GamePanel;
 
 public class PlayState extends States{
 	
@@ -81,7 +82,7 @@ public class PlayState extends States{
 					message = message.replace('-', '~');
 					message = message.replace('"','\"');
 					if(!message.equals("")){
-						Client.sendMessageToServer("CHAT-" + "ALL-" + message);
+						Client.sendMessageToServer(new ChatMessage(message));
 						jtf.setText("");
 					}
 					
@@ -178,9 +179,11 @@ public class PlayState extends States{
 	}
 	
 
-	public void interpretMessage(String message) {
-		if(message.split("-")[0].equals("CHAT")){
-			chatArea.setText(chatArea.getText() + "\n" + message.split("-")[1]);
+	public void interpretMessage(Message message) {
+		if(message.getType().equals("CHAT")){
+			ChatMessage msg = (ChatMessage)message;
+			String m = msg.getMessage();
+			chatArea.setText(chatArea.getText() + "\n" + m);
 			try {
 				chatArea.setCaretPosition(chatArea.getDocument().getLength());
 				jsp.scrollRectToVisible(chatArea.modelToView(chatArea.getDocument().getLength()));

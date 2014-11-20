@@ -12,8 +12,13 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
+import message.CloseMessage;
+import message.Message;
+import message.StartMessage;
+
 public class LoadingState extends States {
 	private Image background;
+	private String s = null;
 
 	public LoadingState(GameStates gameStates) {
 		// TODO Auto-generated constructor stub
@@ -55,11 +60,8 @@ public class LoadingState extends States {
 		g.fillPolygon(dialog);
 		g.setColor(Color.BLACK);
 		g.drawString("Waiting...", 300, 140);
-		String temp = manager.getClient().getnumPlayers();
+		String temp = s;
 		if(temp == null){
-			//System.out.println("Hi");
-		}
-		else if(temp.equals("Error Connecting")){
 			temp = "Error Connecting";
 			g.drawString(temp, 275, 160);
 			g.drawString("Return to Menu?", 277, 180);
@@ -67,15 +69,9 @@ public class LoadingState extends States {
 			g.drawString("Ok", 310, 400);
 		}
 		else if(temp!=null){
-			temp += "/4";
 			g.drawString(temp, 288, 160);
 			g.drawString("Cancel", 330, 400);
-		}
-		String checkStart = manager.getClient().checkStart();
-		if(checkStart!=null){
-			manager.setState(2);
-		}
-		
+		}		
 		
 	}
 
@@ -84,7 +80,7 @@ public class LoadingState extends States {
 		// TODO Auto-generated method stub
 		if(k == KeyEvent.VK_ENTER){
 			manager.setState(0);
-			Client.sendMessageToServer("CLOSE");
+			Client.sendMessageToServer(new CloseMessage());
 		}
 	}
 
@@ -94,9 +90,18 @@ public class LoadingState extends States {
 
 	}
 
-	@Override
-	public void interpretMessage(String message) {
-		// TODO Auto-generated method stub
+	public void interpretMessage(Message message) {
+		if(message.getType().equals("START")){
+			StartMessage msg = (StartMessage) message;
+			String tmp = msg.getMessage();
+			if(tmp.equals("START")){
+				manager.setState(2);
+			}else{
+				s = tmp;
+				System.out.println("here");
+				
+			}
+		}
 		
 	}
 

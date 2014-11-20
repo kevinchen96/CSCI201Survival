@@ -2,6 +2,8 @@ package GameStates;
 
 import java.awt.Graphics2D;
 
+import message.Message;
+
 public abstract class States {
 	public GameStates manager;
 	public abstract void init();
@@ -9,6 +11,6 @@ public abstract class States {
 	public abstract void draw(Graphics2D g);
 	public abstract void keyPressed(int k);
 	public abstract void keyReleased(int k);
-	abstract public void interpretMessage(String message);
+	abstract public void interpretMessage(Message message);
 	
 }
