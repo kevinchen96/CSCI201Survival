@@ -93,7 +93,7 @@ public class GamePanel extends JPanel  implements Runnable, KeyListener {
 	
 	//handles logic and server communication
 	public void tick(){
-		
+		manager.update();
 	}
 	
 	//handles graphics 
