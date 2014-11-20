@@ -10,7 +10,7 @@ public class StartMessage extends Message{
 	
 	
 	public String getMessage(){
-		if(numJoined < 4){
+		if(numJoined < 5){
 			return "Joined - " + numJoined + " / 4"; 
 		}else{
 			return "START";

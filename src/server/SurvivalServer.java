@@ -44,6 +44,7 @@ public class SurvivalServer {
 				pt.start();
 				sendAll(new StartMessage(players.size()));
 			}
+			sendAll(new StartMessage(5));
 			System.out.println("All players have joined.. game is starting..");
 			playing = true;
 		} catch (IOException e) {
