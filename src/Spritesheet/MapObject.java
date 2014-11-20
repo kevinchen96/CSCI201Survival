@@ -1,11 +1,12 @@
 package Spritesheet;
 
-import Entity.Animation;
-import Map.TileMap;
-import Map.Tile;
+import entity.Animation;
 import game.GamePanel;
 
 import java.awt.Rectangle;
+
+import Map.Tile;
+import Map.TileMap;
 
 public abstract class MapObject {
 	

@@ -1,12 +1,12 @@
 package GameStates;
 
+import entity.player.Player;
 import game.GamePanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.TextField;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
@@ -22,7 +22,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 
-import Entity.player.Player;
 import Map.TileMap;
 
 public class PlayState extends States{

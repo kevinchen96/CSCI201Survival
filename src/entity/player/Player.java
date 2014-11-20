@@ -1,4 +1,4 @@
-package Entity.player;
+package entity.player;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -6,9 +6,9 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import Entity.Animation;
 import Map.TileMap;
 import Spritesheet.MapObject;
+import entity.Animation;
 
 public class Player extends MapObject{
 	private int health, thirst, hunger, strength, defense;  //bars
@@ -31,6 +31,7 @@ public class Player extends MapObject{
 	public int WALKING = 1;
 	public int SLASH = 2;
 	public int DIE = 3;
+	private Animation animation;
 	
 	public int UP = 0; 
 	public int LEFT = 1;
