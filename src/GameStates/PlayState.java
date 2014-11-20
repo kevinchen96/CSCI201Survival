@@ -114,7 +114,7 @@ public class PlayState extends States{
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		
+		player.update();
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public class PlayState extends States{
 		if(player == null) System.out.println("What");
 		
 		player.draw(g);
-		player.update();
+		
 		map.setPosition(GamePanel.gameWidth()/2 - player.getx(), GamePanel.gameHeight()/2 - player.gety());
 	}
 

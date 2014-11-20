@@ -24,7 +24,7 @@ public class GameStates {
 		states.get(s).init();
 	}
 	public void update(){
-		//states.get(currentState).update();
+		states.get(currentState).update();
 	}
 	public void draw(Graphics2D g){
 		states.get(currentState).draw(g);
