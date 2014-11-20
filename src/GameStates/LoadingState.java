@@ -68,7 +68,10 @@ public class LoadingState extends States {
 			g.setColor(Color.WHITE);
 			g.drawString("Ok", 310, 400);
 		}
-		else if(temp!=null){
+		else if(temp.equals("START")){
+			manager.setState(2);
+		}
+		else{
 			g.drawString(temp, 288, 160);
 			g.drawString("Cancel", 330, 400);
 		}		
@@ -94,13 +97,7 @@ public class LoadingState extends States {
 		if(message.getType().equals("START")){
 			StartMessage msg = (StartMessage) message;
 			String tmp = msg.getMessage();
-			if(tmp.equals("START")){
-				manager.setState(2);
-			}else{
-				s = tmp;
-				System.out.println("here");
-				
-			}
+			s = tmp;
 		}
 		
 	}
