@@ -22,6 +22,7 @@ import javax.swing.text.BadLocationException;
 import message.ChatMessage;
 import message.Message;
 import Map.TileMap;
+import entity.Monster.Monster;
 import entity.player.Player;
 import game.GamePanel;
 
@@ -33,7 +34,8 @@ public class PlayState extends States{
 	private JTextArea chatArea;
 	private JScrollPane jsp;
 	private Player player;
-	
+	private Monster monster;
+	private Monster monster2;
 	public PlayState(GameStates gameStates){
 		manager = gameStates;
 	}
@@ -45,6 +47,10 @@ public class PlayState extends States{
 		map.loadMap("src/resources/maps/our_map.map");
 		map.setPosition(0,0);
 		player = new Player(map);
+		monster = new Monster(map);
+		monster2 = new Monster(map);
+		monster.setPosition(200, 200);
+		monster2.setPosition(350,150);
 		player.setPosition(100,100);
 		try {
 			BufferedImage temp;
@@ -131,6 +137,8 @@ public class PlayState extends States{
 		if(player == null) System.out.println("What");
 		
 		player.draw(g);
+		monster.draw(g);
+		monster2.draw(g);
 		
 		map.setPosition(GamePanel.gameWidth()/2 - player.getx(), GamePanel.gameHeight()/2 - player.gety());
 	}
