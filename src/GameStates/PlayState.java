@@ -40,9 +40,9 @@ public class PlayState extends States{
 
 	@Override
 	public void init() {
-		map = new TileMap(30); // parameter = square size of tiles (pixels)
-		map.loadTiles("src/resources/tilesets/grasstileset.gif");
-		map.loadMap("src/resources/maps/level1-1.map");
+		map = new TileMap(64); // parameter = square size of tiles (pixels)
+		map.loadTiles("src/resources/tilesets/tiles.png");
+		map.loadMap("src/resources/maps/our_map.map");
 		map.setPosition(0,0);
 		player = new Player(map);
 		player.setPosition(100,100);
