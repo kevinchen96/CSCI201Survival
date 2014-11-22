@@ -119,11 +119,10 @@ public class Player extends MapObject{
 	
 	public void update(){
 		//if (!notOnScreen()) 
-		if (((!(xtemp==16)) ||
-			currentDirection==RIGHT ||
-			currentDirection==DOWN ||
-			currentDirection==UP)
-			){
+		if (((!(xtemp==16)) || currentDirection==RIGHT || currentDirection==DOWN || currentDirection==UP) &&
+			((!(ytemp==20)) || currentDirection==LEFT || currentDirection==DOWN || currentDirection==RIGHT) &&
+			((!(xtemp==3823)) || currentDirection==LEFT || currentDirection==DOWN || currentDirection==UP) &&
+			((!(ytemp==3785)) || currentDirection==LEFT || currentDirection==RIGHT || currentDirection==UP)){
 		getNextPosition();
 		checkTileMapCollision();
 		setPosition(xtemp, ytemp);
