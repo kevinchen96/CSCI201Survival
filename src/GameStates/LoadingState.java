@@ -15,10 +15,12 @@ import javax.imageio.ImageIO;
 import message.CloseMessage;
 import message.Message;
 import message.StartMessage;
+import message.StartingMessage;
 
 public class LoadingState extends States {
 	private Image background;
 	private String s = null;
+	private int tag;
 
 	public LoadingState(GameStates gameStates) {
 		// TODO Auto-generated constructor stub
@@ -99,7 +101,11 @@ public class LoadingState extends States {
 			String tmp = msg.getMessage();
 			s = tmp;
 		}
-		
+		else if(message.getType().equals("STARTING")){
+			tag = ((StartingMessage) message).getMessage();
+			manager.setTag(tag);
+		}
 	}
+
 
 }

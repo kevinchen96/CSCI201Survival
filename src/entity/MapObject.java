@@ -1,4 +1,4 @@
-package Spritesheet;
+package entity;
 
 import entity.Animation;
 import game.GamePanel;

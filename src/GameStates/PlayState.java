@@ -33,7 +33,7 @@ public class PlayState extends States{
 	private JTextArea chatArea;
 	private JScrollPane jsp;
 	private Player player;
-	
+	private int tag;
 	public PlayState(GameStates gameStates){
 		manager = gameStates;
 	}
@@ -43,9 +43,12 @@ public class PlayState extends States{
 		map = new TileMap(30); // parameter = square size of tiles (pixels)
 		map.loadTiles("src/resources/tilesets/grasstileset.gif");
 		map.loadMap("src/resources/maps/level1-1.map");
-		map.setPosition(0,0);
-		player = new Player(map);
-		player.setPosition(100,100);
+		tag = manager.getTag();
+		if(tag == 0){
+			map.setPosition(0,0);
+			player = new Player(map);
+			player.setPosition(500,100);
+		}
 		try {
 			BufferedImage temp;
 			temp = ImageIO.read(new File("src/resources/backgrounds/grassbg1.gif"));

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import Map.TileMap;
-import Spritesheet.MapObject;
+import entity.MapObject;
 import entity.Animation;
 
 public class Player extends MapObject{

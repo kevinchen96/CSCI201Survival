@@ -12,6 +12,7 @@ import java.util.List;
 
 import message.Message;
 import message.StartMessage;
+import message.StartingMessage;
 
 public class SurvivalServer {
 	
@@ -35,12 +36,12 @@ public class SurvivalServer {
 			System.out.println("Starting server...");
 			ServerSocket ss = new ServerSocket(8000);
 			System.out.println("Server running... waiting for players to join...");
-			while(players.size() < 4){
+			while(players.size() < 1){
 				Socket s = ss.accept();
 				PlayerThread pt = new PlayerThread(s, this, players.size());
 				players.add(pt);
 				System.out.println(players.size() + " joined...");
-				
+				sendPlayer(players.size()-1, new StartingMessage(players.size()-1));
 				pt.start();
 				sendAll(new StartMessage(players.size()));
 			}
@@ -75,5 +76,8 @@ public class SurvivalServer {
 		for(int i = 0; i < players.size(); i++){
 			players.get(i).send(message);
 		}
+	}
+	public void sendPlayer(int i, Message message){
+		players.get(i).send(message);
 	}
 }
