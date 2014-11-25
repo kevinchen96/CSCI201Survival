@@ -67,7 +67,11 @@ public class SurvivalServer {
 						players.get(i).updateIndex(i);
 					}
 				}				
-			}else{
+			}
+			else if(msg.getType().equals("PLAYER")){
+				sendAllExceptMe(msg);
+			}
+			else{
 				sendAll(msg);
 			}
 	}
@@ -77,7 +81,15 @@ public class SurvivalServer {
 			players.get(i).send(message);
 		}
 	}
+<<<<<<< HEAD
 	public void sendPlayer(int i, Message message){
 		players.get(i).send(message);
+=======
+	
+	public void sendAllExceptMe(Message message){
+		for(int i = 0; i < players.size(); i++){
+			if(i != message.getIndex()) players.get(i).send(message);
+		}
+>>>>>>> 7a598c92ac95ccad99720608db2fdd497e0b3125
 	}
 }

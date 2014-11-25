@@ -21,6 +21,7 @@ import javax.swing.text.BadLocationException;
 
 import message.ChatMessage;
 import message.Message;
+import message.PlayerMessage;
 import Map.TileMap;
 import entity.Monster.Monster;
 import entity.player.Player;
@@ -39,7 +40,11 @@ public class PlayState extends States{
 
 	private Monster monster;
 	private Monster monster2;
+<<<<<<< HEAD
 
+=======
+	private PlayerMessage[] otherPlayers = {null, null, null, null}; 
+>>>>>>> 7a598c92ac95ccad99720608db2fdd497e0b3125
 	public PlayState(GameStates gameStates){
 		manager = gameStates;
 	}
@@ -154,11 +159,17 @@ public class PlayState extends States{
 
 		//draw map
 		map.render(g);
-		if(player == null) System.out.println("What");
-		
 		player.draw(g);
+		
+		for(PlayerMessage p : otherPlayers){
+			if(p!=null && otherPlayerWithinScreen(p)){
+				g.drawImage(player.getAnimation(p.getCurrentDirection(), p.getCurrentAction()), (int) (p.getX() + map.getX() - 32), (int) (p.getY() + map.getY() - 32), null);
+			}
+		}
+		
 		monster.draw(g);
 		monster2.draw(g);
+		
 		
 		map.setPosition(GamePanel.gameWidth()/2 - player.getx(), GamePanel.gameHeight()/2 - player.gety());
 	}
@@ -168,19 +179,15 @@ public class PlayState extends States{
 
 		//movement 
 		if(k == KeyEvent.VK_UP){
-			System.out.println("up");
 			player.setCurrDir(0);
 			player.setWalking(true);
 		}if(k == KeyEvent.VK_RIGHT){
-			System.out.println("right");
 			player.setCurrDir(3);
 			player.setWalking(true);
 		}if(k == KeyEvent.VK_DOWN){
-			System.out.println("down");
 			player.setCurrDir(2);
 			player.setWalking(true);
 		}if(k == KeyEvent.VK_LEFT){
-			System.out.println("left");
 			player.setCurrDir(1);
 			player.setWalking(true);
 		}if(k == KeyEvent.VK_A){
@@ -189,6 +196,7 @@ public class PlayState extends States{
 			chat.requestFocus();
 		}
 		player.setIdle(false);
+		Client.sendMessageToServer(new PlayerMessage(player.getCurrentDirection(), player.getCurrentDirection(), player.getx(), player.gety()));
 	}
 
 	@Override
@@ -217,7 +225,19 @@ public class PlayState extends States{
 				jsp.scrollRectToVisible(chatArea.modelToView(chatArea.getDocument().getLength()));
 			} catch (BadLocationException e) {
 			}
+		}else if(message.getType().equals("PLAYER")){
+			otherPlayers[message.getIndex()] = (PlayerMessage) message;
 		}
+	}
+	
+	private boolean otherPlayerWithinScreen(PlayerMessage p){
+		if(p.getX() <= player.getx() + GamePanel.gameWidth()/2 && p.getX() >= player.getx() - GamePanel.gameWidth()/2){
+			if(p.getY() <= player.gety() + GamePanel.gameHeight()/2 && p.getY() >= player.gety() - GamePanel.gameHeight()/2){
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 }
