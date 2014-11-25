@@ -11,8 +11,14 @@ import entity.MapObject;
 import entity.Animation;
 
 public class Player extends MapObject{
-	private int health, thirst, hunger, strength, defense;  //bars
-	private int currHealth, currThirst, currHunger;
+	public int health;  //bars
+	private int thirst;
+	private int hunger;
+	private int strength;
+	private int defense;
+	public int currHealth;
+	private int currThirst;
+	private int currHunger;
 	private int healthRate, thirstRate, hungerRate; //rates
 	private int expHealth, expThirst, expHunger; //amount of experience gained for each bar
 	private int maxBag, maxEq; //max number of items bag and equipment can store
@@ -78,7 +84,7 @@ public class Player extends MapObject{
 					(sprites.get(i).get(1))[j] = spritesheet.getSubimage(j*64, (i+8)*64, 64, 64);
 				}
 				for(int j = 0; j < numFrames[2]; j++){
-					(sprites.get(i).get(2))[j] = spritesheet.getSubimage(j*64, (i+12)*64, 64, 64);
+					(sprites.get(i).get(2))[j] = spritesheet.getSubimage(((j*3)+1)*64, ((i*3)+22)*64, 64, 64);
 				}
 				for(int j = 0; j < numFrames[3]; j++){
 					(sprites.get(i).get(3))[j] = spritesheet.getSubimage(j*64, 20*64, 64, 64);

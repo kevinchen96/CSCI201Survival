@@ -2,6 +2,7 @@ package GameStates;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.FocusAdapter;
@@ -43,8 +44,14 @@ public class PlayState extends States{
 
 	private Monster monster;
 	private Monster monster2;
+<<<<<<< HEAD
 	private PlayerMessage[] otherPlayers = {null, null, null, null}; 
 	private ArrayList<Monster> Monsters;
+=======
+
+	private PlayerMessage[] otherPlayers = {null, null, null, null}; 
+
+>>>>>>> de079c49424446e6e2950087b23f3cbc39a2a3f5
 	public PlayState(GameStates gameStates){
 		manager = gameStates;
 	}
@@ -164,7 +171,6 @@ public class PlayState extends States{
 		
 		//draw background
 		g.drawImage(background, 0, 0, null );
-
 		//draw map
 		map.render(g);
 		for(Monster m: Monsters){
@@ -177,9 +183,22 @@ public class PlayState extends States{
 				g.drawImage(player.getAnimation(p.getCurrentDirection(), p.getCurrentAction()), (int) (p.getX() + map.getX() - 32), (int) (p.getY() + map.getY() - 32), null);
 			}
 		}
+<<<<<<< HEAD
 		
 		
 		
+=======
+
+		monster.draw(g);
+		monster2.draw(g);
+		//draw health bar
+		g.setColor(Color.ORANGE);
+		g.fillRect(0, 400, 700, 50);
+		g.setColor(Color.RED);
+		Font font2 = new Font("Verdana", Font.BOLD, 18);
+		g.setFont(font2);
+		g.drawString("Health: " + player.currHealth + "/" + player.health, 10, 425);
+>>>>>>> de079c49424446e6e2950087b23f3cbc39a2a3f5
 		map.setPosition(GamePanel.gameWidth()/2 - player.getx(), GamePanel.gameHeight()/2 - player.gety());
 	}
 
