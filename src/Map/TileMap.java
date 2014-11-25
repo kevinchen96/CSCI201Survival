@@ -57,6 +57,7 @@ public class TileMap {
 			height = numRows * tileSize;
 			
 			xmin = GamePanel.gameWidth() - width;
+			System.out.println("this is xmin: " + xmin);
 			xmax = 0;
 			ymin = GamePanel.gameHeight() - height;
 			ymax = 0;
@@ -111,10 +112,12 @@ public class TileMap {
 	}
 	
 	public double getX(){
+		System.out.println(x);
 		return x;
 	}
 	
 	public double getY(){
+		System.out.println(y);
 		return y;
 	}
 	

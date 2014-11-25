@@ -8,6 +8,7 @@ import message.Message;
 public class GameStates {
 	private static ArrayList<States> states;
 	private Client user;
+	private int tag;
 	public static int currentState;
 	public int MenuState = 0;
 	public int LoadingState = 1;
@@ -44,5 +45,11 @@ public class GameStates {
 	
 	public static void recieveMessage(Message message){
 		states.get(currentState).interpretMessage(message);
+	}
+	public void setTag(int i){
+		tag = i;
+	}
+	public int getTag(){
+		return tag;
 	}
 }
