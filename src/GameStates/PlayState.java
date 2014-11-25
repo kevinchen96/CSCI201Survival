@@ -34,29 +34,33 @@ public class PlayState extends States{
 	private JTextArea chatArea;
 	private JScrollPane jsp;
 	private Player player;
-<<<<<<< HEAD
+
 	private int tag;
-=======
+
 	private Monster monster;
 	private Monster monster2;
->>>>>>> 57bf249cab6d01df4477daedf94b1dfc46c658c4
+
 	public PlayState(GameStates gameStates){
 		manager = gameStates;
 	}
 
 	@Override
 	public void init() {
-<<<<<<< HEAD
+
 		map = new TileMap(30); // parameter = square size of tiles (pixels)
 		map.loadTiles("src/resources/tilesets/grasstileset.gif");
 		map.loadMap("src/resources/maps/level1-1.map");
 		tag = manager.getTag();
+		map.setPosition(0,0);
 		if(tag == 0){
-			map.setPosition(0,0);
 			player = new Player(map);
-			player.setPosition(500,100);
+			player.setPosition(100,100);
 		}
-=======
+		else if(tag == 1){
+			player = new Player(map);
+			player.setPosition(500, 100);
+		}
+
 		map = new TileMap(64); // parameter = square size of tiles (pixels)
 		map.loadTiles("src/resources/tilesets/tiles.png");
 		map.loadMap("src/resources/maps/our_map.map");
@@ -67,7 +71,7 @@ public class PlayState extends States{
 		monster.setPosition(200, 200);
 		monster2.setPosition(350,150);
 		player.setPosition(100,100);
->>>>>>> 57bf249cab6d01df4477daedf94b1dfc46c658c4
+
 		try {
 			BufferedImage temp;
 			temp = ImageIO.read(new File("src/resources/backgrounds/grassbg1.gif"));

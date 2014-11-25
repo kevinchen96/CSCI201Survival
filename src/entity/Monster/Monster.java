@@ -9,9 +9,8 @@ import javax.imageio.ImageIO;
 
 import entity.Animation;
 import Map.TileMap;
-import Spritesheet.MapObject;
 
-public class Monster extends MapObject{
+public class Monster extends entity.MapObject{
 	private String name;
 	private int speed;
 	private int health;
