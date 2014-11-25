@@ -24,7 +24,12 @@ public class Animation {
 		delay = d;
 	}
 	public void setFrame(int i) {
-		currentF = i;
+		if(i < frames.length){
+			currentF = i;
+		}
+		else{
+			currentF = 0;
+		}
 	}
 	public void update(){
 		long now = (System.nanoTime()-startTime)/1000000;

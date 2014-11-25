@@ -105,11 +105,14 @@ public class Player extends MapObject{
 	public int getRange(){
 		return range;
 	}
-	public BufferedImage getAnimation(int currentDirection, int currentAction){
-		animation2.setFrames(sprites.get(currentDirection).get(IDLE));
+	public BufferedImage getAnimation(int currentDirection, int currentAction, int currentFrame){
+		animation2.setFrames(sprites.get(currentDirection).get(currentAction));
+		animation2.setFrame(currentFrame);
 		return animation2.getImage();
 	}
-	
+	public int getCurrentFrame(){
+		return animation.getFrame();
+	}
 	public void getNextPosition(){
 		if(walking){
 			if(currentDirection == LEFT){

@@ -176,7 +176,7 @@ public class PlayState extends States{
 		
 		for(PlayerMessage p : otherPlayers){
 			if(p!=null && otherPlayerWithinScreen(p)){
-				g.drawImage(player.getAnimation(p.getCurrentDirection(), p.getCurrentAction()), (int) (p.getX() + map.getX() - 32), (int) (p.getY() + map.getY() - 32), null);
+				g.drawImage(player.getAnimation(p.getCurrentDirection(), p.getCurrentAction(), p.getCurrentFrame()), (int) (p.getX() + map.getX() - 32), (int) (p.getY() + map.getY() - 32), null);
 			}
 		}
 		//draw health bar
@@ -219,7 +219,7 @@ public class PlayState extends States{
 			chat.requestFocus();
 		}
 		player.setIdle(false);
-		Client.sendMessageToServer(new PlayerMessage(player.getCurrentDirection(), player.getCurrentAction(), player.getx(), player.gety()));
+		Client.sendMessageToServer(new PlayerMessage(player.getCurrentDirection(), player.getCurrentAction(), player.getCurrentFrame(), player.getx(), player.gety()));
 		
 	}
 
