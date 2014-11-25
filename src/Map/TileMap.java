@@ -112,12 +112,10 @@ public class TileMap {
 	}
 	
 	public double getX(){
-		System.out.println(x);
 		return x;
 	}
 	
 	public double getY(){
-		System.out.println(y);
 		return y;
 	}
 	

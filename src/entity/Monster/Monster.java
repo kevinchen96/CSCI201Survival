@@ -43,6 +43,7 @@ public class Monster extends entity.MapObject{
 		this.xPosition = x;
 		this.yPosition = y;
 		dead = false;*/
+		health = 300;
 		BufferedImage spritesheet;
 		try {
 			//BufferedImage spritesheet = ImageIO.read(this.getClass().getResourceAsStream("char1.png"));
@@ -91,6 +92,7 @@ public class Monster extends entity.MapObject{
 		if (health < 0 || health == 0) {
 			dead = true;
 		}
+		System.out.println("Monster's health: " + health);
 	}
 	
 	public void move() {

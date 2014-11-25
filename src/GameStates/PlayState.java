@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -21,7 +22,9 @@ import javax.swing.text.BadLocationException;
 
 import message.ChatMessage;
 import message.Message;
+import message.MonsterMessage;
 import message.PlayerMessage;
+import message.StartingMessage;
 import Map.TileMap;
 import entity.Monster.Monster;
 import entity.player.Player;
@@ -40,11 +43,8 @@ public class PlayState extends States{
 
 	private Monster monster;
 	private Monster monster2;
-<<<<<<< HEAD
-
-=======
 	private PlayerMessage[] otherPlayers = {null, null, null, null}; 
->>>>>>> 7a598c92ac95ccad99720608db2fdd497e0b3125
+	private ArrayList<Monster> Monsters;
 	public PlayState(GameStates gameStates){
 		manager = gameStates;
 	}
@@ -52,11 +52,20 @@ public class PlayState extends States{
 	@Override
 	public void init() {
 
-		map = new TileMap(30); // parameter = square size of tiles (pixels)
+	/*	map = new TileMap(30); // parameter = square size of tiles (pixels)
 		map.loadTiles("src/resources/tilesets/grasstileset.gif");
 		map.loadMap("src/resources/maps/level1-1.map");
-		tag = manager.getTag();
+		
 		map.setPosition(0,0);
+		*/
+		
+		tag = manager.getTag();
+		map = new TileMap(64); // parameter = square size of tiles (pixels)
+		map.loadTiles("src/resources/tilesets/tiles.png");
+		map.loadMap("src/resources/maps/our_map.map");
+		map.setPosition(0,0);
+		
+		System.out.println(tag);
 		if(tag == 0){
 			player = new Player(map);
 			player.setPosition(100,100);
@@ -65,18 +74,17 @@ public class PlayState extends States{
 			player = new Player(map);
 			player.setPosition(500, 100);
 		}
-
-		map = new TileMap(64); // parameter = square size of tiles (pixels)
-		map.loadTiles("src/resources/tilesets/tiles.png");
-		map.loadMap("src/resources/maps/our_map.map");
-		map.setPosition(0,0);
-		player = new Player(map);
+		Monsters = new ArrayList<Monster>();
+		
 		monster = new Monster(map);
 		monster2 = new Monster(map);
 		monster.setPosition(200, 200);
 		monster2.setPosition(350,150);
-		player.setPosition(100,100);
-
+		Monsters.add(monster);
+		Monsters.add(monster2);
+		for(int i = 0; i < Monsters.size(); i++){
+			System.out.println(Monsters.get(i).getx() + " " + Monsters.get(i).gety());
+		}
 		try {
 			BufferedImage temp;
 			temp = ImageIO.read(new File("src/resources/backgrounds/grassbg1.gif"));
@@ -159,6 +167,9 @@ public class PlayState extends States{
 
 		//draw map
 		map.render(g);
+		for(Monster m: Monsters){
+			m.draw(g);
+		}
 		player.draw(g);
 		
 		for(PlayerMessage p : otherPlayers){
@@ -167,8 +178,6 @@ public class PlayState extends States{
 			}
 		}
 		
-		monster.draw(g);
-		monster2.draw(g);
 		
 		
 		map.setPosition(GamePanel.gameWidth()/2 - player.getx(), GamePanel.gameHeight()/2 - player.gety());
@@ -178,6 +187,7 @@ public class PlayState extends States{
 	public void keyPressed(int k) {
 
 		//movement 
+		System.out.println(player.getx() + " " + player.gety());
 		if(k == KeyEvent.VK_UP){
 			player.setCurrDir(0);
 			player.setWalking(true);
@@ -192,11 +202,19 @@ public class PlayState extends States{
 			player.setWalking(true);
 		}if(k == KeyEvent.VK_A){
 			player.setSlash(true);
+			for(int i = 0; i < Monsters.size(); i++){
+				if(otherMonsterWithinAttack(Monsters.get(i))){
+					System.out.println(i);
+					System.out.println("Attack to server");
+					Client.sendMessageToServer(new MonsterMessage(player.getStrength(), i));
+				}
+			}
 		}if(k == KeyEvent.VK_ENTER){
 			chat.requestFocus();
 		}
 		player.setIdle(false);
-		Client.sendMessageToServer(new PlayerMessage(player.getCurrentDirection(), player.getCurrentDirection(), player.getx(), player.gety()));
+		Client.sendMessageToServer(new PlayerMessage(player.getCurrentDirection(), player.getCurrentAction(), player.getx(), player.gety()));
+		
 	}
 
 	@Override
@@ -228,6 +246,14 @@ public class PlayState extends States{
 		}else if(message.getType().equals("PLAYER")){
 			otherPlayers[message.getIndex()] = (PlayerMessage) message;
 		}
+		else if(message.getType().equals("MONSTER")){
+			Monsters.get(((MonsterMessage) message).getWhich()).attacked(((MonsterMessage) message).getDamage());
+			if(Monsters.get(((MonsterMessage) message).getWhich()).isDead()){
+				System.out.println("Monster Died");
+				Monsters.remove(((MonsterMessage) message).getWhich());
+				System.out.println(((MonsterMessage) message).getWhich());
+			}
+		}
 	}
 	
 	private boolean otherPlayerWithinScreen(PlayerMessage p){
@@ -239,5 +265,37 @@ public class PlayState extends States{
 		
 		return false;
 	}
-
+	
+	private boolean otherMonsterWithinAttack(Monster p){
+		if(p.getx() <= player.getx() + 40 && p.getx() > player.getx()){
+			if(player.getCurrentDirection() == 3){
+				if(p.gety() <= player.gety()+20 && p.gety() >= player.gety()-20){
+					return true;
+				}
+			}
+		}
+		if(p.getx() >= player.getx() - 40 && p.getx() < player.getx()){
+			if(player.getCurrentDirection() == 1){
+				if(p.gety() <= player.gety()+20 && p.gety() >= player.gety()-20){
+					return true;
+				}
+			}
+		}
+		if(p.gety() <= player.gety() + 60 && p.gety() > player.gety()){
+			if(player.getCurrentDirection() == 2){
+				if(p.getx() <= player.getx() + 40 && p.getx() >= player.getx()-40){
+					return true;
+				}
+			}
+		}
+		if(p.gety() >= player.gety() - 60 && p.gety() < player.gety()){
+			if(player.getCurrentDirection() == 0){
+				if(p.getx() <= player.getx() + 40 && p.getx() >= player.getx()-40){
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
 }

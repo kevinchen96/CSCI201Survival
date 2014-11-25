@@ -27,6 +27,7 @@ public class Player extends MapObject{
 	private boolean idle, walking, slash, dead;
 	private ArrayList<ArrayList<BufferedImage[]>> sprites;
 	private final int[] numFrames = {1, 9, 6, 6};
+	private int range = 10;
 	public int IDLE = 0;
 	public int WALKING = 1;
 	public int SLASH = 2;
@@ -95,6 +96,9 @@ public class Player extends MapObject{
 		animation.setDelay(50);
 	}
 	
+	public int getRange(){
+		return range;
+	}
 	public BufferedImage getAnimation(int currentDirection, int currentAction){
 		animation2.setFrames(sprites.get(currentDirection).get(IDLE));
 		return animation2.getImage();

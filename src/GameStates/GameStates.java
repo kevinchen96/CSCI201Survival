@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 import message.Message;
+import message.StartingMessage;
 
 public class GameStates {
 	private static ArrayList<States> states;

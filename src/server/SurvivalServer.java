@@ -18,7 +18,7 @@ public class SurvivalServer {
 	
 	List<PlayerThread> players; //a player's position in list is 1 minus it's id (first part of any message)
 	private boolean playing = false;
-	
+
 	public SurvivalServer(){
 		players = Collections.synchronizedList(new ArrayList<PlayerThread>());
 		
@@ -81,15 +81,14 @@ public class SurvivalServer {
 			players.get(i).send(message);
 		}
 	}
-<<<<<<< HEAD
+
 	public void sendPlayer(int i, Message message){
 		players.get(i).send(message);
-=======
+	}
 	
 	public void sendAllExceptMe(Message message){
 		for(int i = 0; i < players.size(); i++){
 			if(i != message.getIndex()) players.get(i).send(message);
 		}
->>>>>>> 7a598c92ac95ccad99720608db2fdd497e0b3125
 	}
 }
