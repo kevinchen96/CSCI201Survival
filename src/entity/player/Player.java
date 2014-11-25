@@ -37,6 +37,7 @@ public class Player extends MapObject{
 	public int LEFT = 1;
 	public int DOWN = 2;
 	public int RIGHT = 3;
+	private Animation animation2;
 	
 	public Player(TileMap tm){
 		super(tm);
@@ -55,6 +56,7 @@ public class Player extends MapObject{
 		maxLevel = false;
 		dead = false;
 		BufferedImage spritesheet;
+		animation2 = new Animation();
 		try {
 			//BufferedImage spritesheet = ImageIO.read(this.getClass().getResourceAsStream("char1.png"));
 			spritesheet = ImageIO.read(new File("src/char1.png"));
@@ -92,6 +94,12 @@ public class Player extends MapObject{
 		animation.setFrames(sprites.get(currentDirection).get(IDLE));	
 		animation.setDelay(50);
 	}
+	
+	public BufferedImage getAnimation(int currentDirection, int currentAction){
+		animation2.setFrames(sprites.get(currentDirection).get(IDLE));
+		return animation2.getImage();
+	}
+	
 	public void getNextPosition(){
 		if(walking){
 			if(currentDirection == LEFT){
@@ -126,10 +134,7 @@ public class Player extends MapObject{
 		getNextPosition();
 		checkTileMapCollision();
 		setPosition(xtemp, ytemp);
-		System.out.println(currentDirection);
-		System.out.println(xtemp + " " + ytemp);
 		if(idle){
-			System.out.println("IDLE");			
 			if(currentAction != IDLE){
 				currentAction = IDLE;
 				animation.setFrames(sprites.get(currentDirection).get(IDLE));
@@ -137,10 +142,8 @@ public class Player extends MapObject{
 			}
 		}
 		else if(walking){
-			System.out.println("Walking");
 			if(currentAction != WALKING){
 				currentAction = WALKING;
-				System.out.println(currentDirection);
 				animation.setFrames(sprites.get(currentDirection).get(WALKING));
 				animation.setDelay(50);
 			}
@@ -331,6 +334,13 @@ public class Player extends MapObject{
 	}
 	public boolean getDead(){
 		return dead;
+	}
+	public int getCurrentDirection() {
+		return currentDirection;
+	}
+	
+	public int getCurrentAction(){
+		return currentAction;
 	}
 	
 }

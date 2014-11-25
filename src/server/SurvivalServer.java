@@ -35,7 +35,7 @@ public class SurvivalServer {
 			System.out.println("Starting server...");
 			ServerSocket ss = new ServerSocket(8000);
 			System.out.println("Server running... waiting for players to join...");
-			while(players.size() < 1){
+			while(players.size() < 2){
 				Socket s = ss.accept();
 				PlayerThread pt = new PlayerThread(s, this, players.size());
 				players.add(pt);
@@ -66,7 +66,11 @@ public class SurvivalServer {
 						players.get(i).updateIndex(i);
 					}
 				}				
-			}else{
+			}
+			else if(msg.getType().equals("PLAYER")){
+				sendAllExceptMe(msg);
+			}
+			else{
 				sendAll(msg);
 			}
 	}
@@ -74,6 +78,12 @@ public class SurvivalServer {
 	public void sendAll(Message message){
 		for(int i = 0; i < players.size(); i++){
 			players.get(i).send(message);
+		}
+	}
+	
+	public void sendAllExceptMe(Message message){
+		for(int i = 0; i < players.size(); i++){
+			if(i != message.getIndex()) players.get(i).send(message);
 		}
 	}
 }
