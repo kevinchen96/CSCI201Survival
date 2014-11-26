@@ -41,7 +41,6 @@ public class PlayState extends States{
 	private JScrollPane jsp;
 	private Player player;
 	private Monster monster;
-	private int q = 0;
 	private static List<TextItem> textItems;
 	private Monster monster2;
 	private PlayerMessage[] otherPlayers = {null, null, null, null}; 
@@ -154,12 +153,6 @@ public class PlayState extends States{
 		
 		monster.draw(g);
 		monster2.draw(g);
-		
-		q++;
-		if(q == 100){
-			createNewTextItem("This is the much longer Test 3", player.getx() + (int) map.getX(), player.gety() + (int) map.getY());
-			q = 0;
-		}
 		
 		for(TextItem t : textItems){
 			t.draw(g);

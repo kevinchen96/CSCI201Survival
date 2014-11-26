@@ -29,12 +29,12 @@ public class TextItem extends Thread {
 				now = System.nanoTime();
 			}
 			
-			if(System.nanoTime() - start > 1300000000) break;
+			if(System.nanoTime() - start > 2000000000) break;
 		}
 		items.remove(this);
 	}
 	
 	public void draw(Graphics2D g){
-		g.drawString(text, startX, startY - (count*5));
+		g.drawString(text, startX, startY - (count*2));
 	}
 }
