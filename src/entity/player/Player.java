@@ -7,18 +7,12 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import Map.TileMap;
-import entity.MapObject;
 import entity.Animation;
+import entity.MapObject;
 
 public class Player extends MapObject{
-	public int health;  //bars
-	private int thirst;
-	private int hunger;
-	private int strength;
-	private int defense;
-	public int currHealth;
-	private int currThirst;
-	private int currHunger;
+	private int health, thirst, hunger, strength, defense;  //bars
+	private int currHealth, currThirst, currHunger;
 	private int healthRate, thirstRate, hungerRate; //rates
 	private int expHealth, expThirst, expHunger; //amount of experience gained for each bar
 	private int maxBag, maxEq; //max number of items bag and equipment can store
@@ -33,7 +27,6 @@ public class Player extends MapObject{
 	private boolean idle, walking, slash, dead;
 	private ArrayList<ArrayList<BufferedImage[]>> sprites;
 	private final int[] numFrames = {1, 9, 6, 6};
-	private int range = 10;
 	public int IDLE = 0;
 	public int WALKING = 1;
 	public int SLASH = 2;
@@ -84,7 +77,7 @@ public class Player extends MapObject{
 					(sprites.get(i).get(1))[j] = spritesheet.getSubimage(j*64, (i+8)*64, 64, 64);
 				}
 				for(int j = 0; j < numFrames[2]; j++){
-					(sprites.get(i).get(2))[j] = spritesheet.getSubimage(((j*3)+1)*64, ((i*3)+22)*64, 64, 64);
+					(sprites.get(i).get(2))[j] = spritesheet.getSubimage(j*64, (i+12)*64, 64, 64);
 				}
 				for(int j = 0; j < numFrames[3]; j++){
 					(sprites.get(i).get(3))[j] = spritesheet.getSubimage(j*64, 20*64, 64, 64);
@@ -102,17 +95,16 @@ public class Player extends MapObject{
 		animation.setDelay(50);
 	}
 	
-	public int getRange(){
-		return range;
-	}
 	public BufferedImage getAnimation(int currentDirection, int currentAction, int currentFrame){
 		animation2.setFrames(sprites.get(currentDirection).get(currentAction));
 		animation2.setFrame(currentFrame);
 		return animation2.getImage();
 	}
+	
 	public int getCurrentFrame(){
 		return animation.getFrame();
 	}
+	
 	public void getNextPosition(){
 		if(walking){
 			if(currentDirection == LEFT){
@@ -175,7 +167,6 @@ public class Player extends MapObject{
 				animation.setDelay(50);
 			}
 		}
-		
 		animation.update();
 		}
 	}
@@ -356,4 +347,12 @@ public class Player extends MapObject{
 		return currentAction;
 	}
 	
+	public boolean getSlash(){
+		return slash;
+	}
+
+	public boolean getIdle() {
+		if(idle) return true;
+		return false;
+	}
 }

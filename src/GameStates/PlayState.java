@@ -1,8 +1,10 @@
 package GameStates;
 
+import game.GamePanel;
+import items.TextItem;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.FocusAdapter;
@@ -13,6 +15,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -23,13 +27,10 @@ import javax.swing.text.BadLocationException;
 
 import message.ChatMessage;
 import message.Message;
-import message.MonsterMessage;
 import message.PlayerMessage;
-import message.StartingMessage;
 import Map.TileMap;
 import entity.Monster.Monster;
 import entity.player.Player;
-import game.GamePanel;
 
 public class PlayState extends States{
 	
@@ -39,55 +40,28 @@ public class PlayState extends States{
 	private JTextArea chatArea;
 	private JScrollPane jsp;
 	private Player player;
-
-	private int tag;
-
 	private Monster monster;
+	private int q = 0;
+	private static List<TextItem> textItems;
 	private Monster monster2;
-
 	private PlayerMessage[] otherPlayers = {null, null, null, null}; 
-	private ArrayList<Monster> Monsters;
-
 	public PlayState(GameStates gameStates){
 		manager = gameStates;
 	}
 
 	@Override
 	public void init() {
-
-	/*	map = new TileMap(30); // parameter = square size of tiles (pixels)
-		map.loadTiles("src/resources/tilesets/grasstileset.gif");
-		map.loadMap("src/resources/maps/level1-1.map");
-		
-		map.setPosition(0,0);
-		*/
-		
-		tag = manager.getTag();
+		textItems = Collections.synchronizedList(new ArrayList<TextItem>());
 		map = new TileMap(64); // parameter = square size of tiles (pixels)
 		map.loadTiles("src/resources/tilesets/tiles.png");
 		map.loadMap("src/resources/maps/our_map.map");
 		map.setPosition(0,0);
-		
-		System.out.println(tag);
-		if(tag == 0){
-			player = new Player(map);
-			player.setPosition(100,100);
-		}
-		else if(tag == 1){
-			player = new Player(map);
-			player.setPosition(500, 100);
-		}
-		Monsters = new ArrayList<Monster>();
-		
+		player = new Player(map);
 		monster = new Monster(map);
 		monster2 = new Monster(map);
 		monster.setPosition(200, 200);
 		monster2.setPosition(350,150);
-		Monsters.add(monster);
-		Monsters.add(monster2);
-		for(int i = 0; i < Monsters.size(); i++){
-			System.out.println(Monsters.get(i).getx() + " " + Monsters.get(i).gety());
-		}
+		player.setPosition(100,100);
 		try {
 			BufferedImage temp;
 			temp = ImageIO.read(new File("src/resources/backgrounds/grassbg1.gif"));
@@ -167,11 +141,9 @@ public class PlayState extends States{
 		
 		//draw background
 		g.drawImage(background, 0, 0, null );
+
 		//draw map
 		map.render(g);
-		for(Monster m: Monsters){
-			m.draw(g);
-		}
 		player.draw(g);
 		
 		for(PlayerMessage p : otherPlayers){
@@ -179,13 +151,20 @@ public class PlayState extends States{
 				g.drawImage(player.getAnimation(p.getCurrentDirection(), p.getCurrentAction(), p.getCurrentFrame()), (int) (p.getX() + map.getX() - 32), (int) (p.getY() + map.getY() - 32), null);
 			}
 		}
-		//draw health bar
-		g.setColor(Color.ORANGE);
-		g.fillRect(0, 400, 700, 50);
-		g.setColor(Color.RED);
-		Font font2 = new Font("Verdana", Font.BOLD, 18);
-		g.setFont(font2);
-		g.drawString("Health: " + player.currHealth + "/" + player.health, 10, 425);
+		
+		monster.draw(g);
+		monster2.draw(g);
+		
+		q++;
+		if(q == 100){
+			createNewTextItem("This is the much longer Test 3", player.getx() + (int) map.getX(), player.gety() + (int) map.getY());
+			q = 0;
+		}
+		
+		for(TextItem t : textItems){
+			t.draw(g);
+		}
+		
 		map.setPosition(GamePanel.gameWidth()/2 - player.getx(), GamePanel.gameHeight()/2 - player.gety());
 	}
 
@@ -193,34 +172,25 @@ public class PlayState extends States{
 	public void keyPressed(int k) {
 
 		//movement 
-		System.out.println(player.getx() + " " + player.gety());
 		if(k == KeyEvent.VK_UP){
 			player.setCurrDir(0);
 			player.setWalking(true);
-		}if(k == KeyEvent.VK_RIGHT){
+		}else if(k == KeyEvent.VK_RIGHT){
 			player.setCurrDir(3);
 			player.setWalking(true);
-		}if(k == KeyEvent.VK_DOWN){
+		}else if(k == KeyEvent.VK_DOWN){
 			player.setCurrDir(2);
 			player.setWalking(true);
-		}if(k == KeyEvent.VK_LEFT){
+		}else if(k == KeyEvent.VK_LEFT){
 			player.setCurrDir(1);
 			player.setWalking(true);
-		}if(k == KeyEvent.VK_A){
+		}else if(k == KeyEvent.VK_A){
 			player.setSlash(true);
-			for(int i = 0; i < Monsters.size(); i++){
-				if(otherMonsterWithinAttack(Monsters.get(i))){
-					System.out.println(i);
-					System.out.println("Attack to server");
-					Client.sendMessageToServer(new MonsterMessage(player.getStrength(), i));
-				}
-			}
 		}if(k == KeyEvent.VK_ENTER){
 			chat.requestFocus();
-		}
+		}		
 		player.setIdle(false);
 		Client.sendMessageToServer(new PlayerMessage(player.getCurrentDirection(), player.getCurrentAction(), player.getCurrentFrame(), player.getx(), player.gety()));
-		
 	}
 
 	@Override
@@ -252,14 +222,6 @@ public class PlayState extends States{
 		}else if(message.getType().equals("PLAYER")){
 			otherPlayers[message.getIndex()] = (PlayerMessage) message;
 		}
-		else if(message.getType().equals("MONSTER")){
-			Monsters.get(((MonsterMessage) message).getWhich()).attacked(((MonsterMessage) message).getDamage());
-			if(Monsters.get(((MonsterMessage) message).getWhich()).isDead()){
-				System.out.println("Monster Died");
-				Monsters.remove(((MonsterMessage) message).getWhich());
-				System.out.println(((MonsterMessage) message).getWhich());
-			}
-		}
 	}
 	
 	private boolean otherPlayerWithinScreen(PlayerMessage p){
@@ -271,37 +233,11 @@ public class PlayState extends States{
 		
 		return false;
 	}
+
 	
-	private boolean otherMonsterWithinAttack(Monster p){
-		if(p.getx() <= player.getx() + 40 && p.getx() > player.getx()){
-			if(player.getCurrentDirection() == 3){
-				if(p.gety() <= player.gety()+20 && p.gety() >= player.gety()-20){
-					return true;
-				}
-			}
+	public static void createNewTextItem(String text, int x, int y){
+		if(textItems != null){
+			textItems.add(new TextItem(text, x, y, textItems));
 		}
-		if(p.getx() >= player.getx() - 40 && p.getx() < player.getx()){
-			if(player.getCurrentDirection() == 1){
-				if(p.gety() <= player.gety()+20 && p.gety() >= player.gety()-20){
-					return true;
-				}
-			}
-		}
-		if(p.gety() <= player.gety() + 60 && p.gety() > player.gety()){
-			if(player.getCurrentDirection() == 2){
-				if(p.getx() <= player.getx() + 40 && p.getx() >= player.getx()-40){
-					return true;
-				}
-			}
-		}
-		if(p.gety() >= player.gety() - 60 && p.gety() < player.gety()){
-			if(player.getCurrentDirection() == 0){
-				if(p.getx() <= player.getx() + 40 && p.getx() >= player.getx()-40){
-					return true;
-				}
-			}
-		}
-		
-		return false;
 	}
 }
