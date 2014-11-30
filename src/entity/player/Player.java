@@ -22,6 +22,7 @@ public class Player extends MapObject{
 	private ArrayList<String> Bag; //bag used to store items (change to type item when made)
 	private ArrayList<String> Equipment; //Equipment such as weapons, armors, boots
 	private ArrayList<String> Inventory;
+	private String username = "";
 	private double moveSpeed; //movement speed
 	private boolean maxLevel; //true if level is at its max
 	private boolean idle, walking, slash, dead;
@@ -174,6 +175,7 @@ public class Player extends MapObject{
 	public void draw(Graphics2D g){
 		setMapPosition();
 		g.drawImage(animation.getImage(), (int)(x + xmap - 32), (int)(y + ymap - 32), null);
+		g.drawString(username, (int)(x + xmap) - username.length() * 3, (int)(y + ymap) - 25);
 	}
 	public void updateHealthC(int x){
 		currHealth+=x;
@@ -201,6 +203,14 @@ public class Player extends MapObject{
 	}
 	public void updateDefense(int x){
 		defense+=x;
+	}
+	
+	public String getUsername(){
+		return username;
+	}
+	
+	public void setUsername(String username){
+		this.username = username;
 	}
 	
 	//updating experience

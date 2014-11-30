@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -28,6 +29,8 @@ import javax.swing.text.BadLocationException;
 import message.ChatMessage;
 import message.Message;
 import message.PlayerMessage;
+import message.UsernameMessage;
+import message.WhisperMessage;
 import Map.TileMap;
 import entity.Monster.Monster;
 import entity.player.Player;
@@ -69,6 +72,7 @@ public class PlayState extends States{
 			System.out.println("Error with background in playstate: " + e.getMessage());
 		}
 		startChat();
+		Client.sendMessageToServer(new UsernameMessage(JOptionPane.showInputDialog(new JFrame(), "Please pick a username.").replace(" ", "")));
 		
 	}
 
@@ -97,8 +101,17 @@ public class PlayState extends States{
 					message = message.replace('-', '~');
 					message = message.replace('"','\"');
 					if(!message.equals("")){
-						Client.sendMessageToServer(new ChatMessage(message));
-						jtf.setText("");
+						if(new Character(message.charAt(0)).equals('<') && message.contains(">")){
+							String toParse = message.substring(message.indexOf('<') +1, message.indexOf('>'));
+							message = message.substring(message.indexOf('>') + 1, message.length());
+							String[] to = toParse.split(" ");
+							Client.sendMessageToServer(new WhisperMessage(message, to, player.getUsername()));
+							jtf.setText("");
+						}
+						else{
+							Client.sendMessageToServer(new ChatMessage(message, player.getUsername()));
+							jtf.setText("");
+						}
 					}
 					
 				}
@@ -147,6 +160,7 @@ public class PlayState extends States{
 		
 		for(PlayerMessage p : otherPlayers){
 			if(p!=null && otherPlayerWithinScreen(p)){
+				g.drawString(p.getUsername(), (int)(p.getX() + map.getX()) - p.getUsername().length() * 3, (int)(p.getY() + map.getY()) - 25);
 				g.drawImage(player.getAnimation(p.getCurrentDirection(), p.getCurrentAction(), p.getCurrentFrame()), (int) (p.getX() + map.getX() - 32), (int) (p.getY() + map.getY() - 32), null);
 			}
 		}
@@ -183,7 +197,7 @@ public class PlayState extends States{
 			chat.requestFocus();
 		}		
 		player.setIdle(false);
-		Client.sendMessageToServer(new PlayerMessage(player.getCurrentDirection(), player.getCurrentAction(), player.getCurrentFrame(), player.getx(), player.gety()));
+		Client.sendMessageToServer(new PlayerMessage(player.getCurrentDirection(), player.getCurrentAction(), player.getCurrentFrame(), player.getUsername(), player.getx(), player.gety()));
 	}
 
 	@Override
@@ -206,13 +220,26 @@ public class PlayState extends States{
 		if(message.getType().equals("CHAT")){
 			ChatMessage msg = (ChatMessage)message;
 			String m = msg.getMessage();
-			chatArea.setText(chatArea.getText() + "\n" + m);
+			chatArea.setText(chatArea.getText() + "\n" + msg.getFrom() + ": " + m);
 			try {
 				chatArea.setCaretPosition(chatArea.getDocument().getLength());
 				jsp.scrollRectToVisible(chatArea.modelToView(chatArea.getDocument().getLength()));
 			} catch (BadLocationException e) {
 			}
-		}else if(message.getType().equals("PLAYER")){
+		}else if(message.getType().equals("WHISPER")){
+			WhisperMessage msg = (WhisperMessage)message;
+			String m = msg.getMessage();
+			chatArea.setText(chatArea.getText() + "\n" + "(Whispered From: " + msg.getFrom() +  ") " + m);
+			try {
+				chatArea.setCaretPosition(chatArea.getDocument().getLength());
+				jsp.scrollRectToVisible(chatArea.modelToView(chatArea.getDocument().getLength()));
+			} catch (BadLocationException e) {
+			}
+			
+		}else if(message.getType().equals("USERNAME")){
+			player.setUsername(((UsernameMessage)message).getUsername());
+		}
+		else if(message.getType().equals("PLAYER")){
 			otherPlayers[message.getIndex()] = (PlayerMessage) message;
 		}
 	}

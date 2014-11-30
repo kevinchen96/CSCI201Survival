@@ -10,9 +10,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import message.ChatMessage;
 import message.Message;
 import message.StartMessage;
 import message.StartingMessage;
+import message.WhisperMessage;
 
 public class SurvivalServer {
 	
@@ -70,6 +72,22 @@ public class SurvivalServer {
 			}
 			else if(msg.getType().equals("PLAYER")){
 				sendAllExceptMe(msg);
+			}
+			else if(msg.getType().equals(("USERNAME"))){
+				sendPlayer(msg.getIndex(), msg);
+			}else if(msg.getType().equals("WHISPER")){
+				WhisperMessage wm = ((WhisperMessage)msg);
+				String next = wm.next();
+				while(next != null){
+					for(PlayerThread pt : players){	
+						if(pt.getUsername().equals(next)){
+							pt.send(wm);
+							ChatMessage cm = new ChatMessage("(To: " + pt.getUsername() +") " + wm.getMessage(), wm.getFrom());
+							players.get(msg.getIndex()).send(cm);
+						}
+					}
+					next = wm.next();
+				}
 			}
 			else{
 				sendAll(msg);
