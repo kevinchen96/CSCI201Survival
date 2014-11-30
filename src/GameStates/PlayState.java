@@ -85,7 +85,7 @@ public class PlayState extends States{
 		
 		String intro = "You have joined the game!\nUse this window to chat with other players:\n ";
 		intro += "- by default your message will be sent to everyone.\n";
-		intro += "- other message methods still need to be implemented.\n";
+		intro += "- To send a private message place recipient usernames inside '<>' at beginning of message \n";
 		intro += "\nGood Luck!\n";
 		
 		chatArea = new JTextArea(intro);
