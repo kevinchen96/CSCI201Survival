@@ -28,6 +28,7 @@ import javax.swing.text.BadLocationException;
 
 import message.ChatMessage;
 import message.Message;
+import message.MonsterMessage;
 import message.PlayerMessage;
 import message.UsernameMessage;
 import message.WhisperMessage;
@@ -47,6 +48,8 @@ public class PlayState extends States{
 	private static List<TextItem> textItems;
 	private Monster monster2;
 	private PlayerMessage[] otherPlayers = {null, null, null, null}; 
+	private int tag;
+	private ArrayList<Monster> Monsters;
 	public PlayState(GameStates gameStates){
 		manager = gameStates;
 	}
@@ -54,16 +57,29 @@ public class PlayState extends States{
 	@Override
 	public void init() {
 		textItems = Collections.synchronizedList(new ArrayList<TextItem>());
+		tag = manager.getTag();
 		map = new TileMap(64); // parameter = square size of tiles (pixels)
 		map.loadTiles("src/resources/tilesets/tiles.png");
 		map.loadMap("src/resources/maps/our_map.map");
 		map.setPosition(0,0);
-		player = new Player(map);
+
+		if(tag == 0){
+			player = new Player(map);
+			player.setPosition(100,100);
+		}
+		else if(tag == 1){
+			player = new Player(map);
+			player.setPosition(500, 100);
+		}
+		Monsters = new ArrayList<Monster>();
+		
 		monster = new Monster(map);
 		monster2 = new Monster(map);
 		monster.setPosition(200, 200);
 		monster2.setPosition(350,150);
-		player.setPosition(100,100);
+		Monsters.add(monster);
+		Monsters.add(monster2);
+	
 		try {
 			BufferedImage temp;
 			temp = ImageIO.read(new File("src/resources/backgrounds/grassbg1.gif"));
@@ -156,6 +172,9 @@ public class PlayState extends States{
 
 		//draw map
 		map.render(g);
+		for(Monster m: Monsters){
+			m.draw(g);
+		}
 		player.draw(g);
 		
 		for(PlayerMessage p : otherPlayers){
@@ -164,9 +183,6 @@ public class PlayState extends States{
 				g.drawImage(player.getAnimation(p.getCurrentDirection(), p.getCurrentAction(), p.getCurrentFrame()), (int) (p.getX() + map.getX() - 32), (int) (p.getY() + map.getY() - 32), null);
 			}
 		}
-		
-		monster.draw(g);
-		monster2.draw(g);
 		
 		for(TextItem t : textItems){
 			t.draw(g);
@@ -193,6 +209,13 @@ public class PlayState extends States{
 			player.setWalking(true);
 		}else if(k == KeyEvent.VK_A){
 			player.setSlash(true);
+			for(int i = 0; i < Monsters.size(); i++){
+				if(otherMonsterWithinAttack(Monsters.get(i))){
+					System.out.println(i);
+					System.out.println("Attack to server");
+					Client.sendMessageToServer(new MonsterMessage(player.getStrength(), i));
+				}
+			}
 		}if(k == KeyEvent.VK_ENTER){
 			chat.requestFocus();
 		}		
@@ -244,6 +267,14 @@ public class PlayState extends States{
 		else if(message.getType().equals("PLAYER")){
 			otherPlayers[message.getIndex()] = (PlayerMessage) message;
 		}
+		else if(message.getType().equals("MONSTER")){
+			Monsters.get(((MonsterMessage) message).getWhich()).attacked(((MonsterMessage) message).getDamage());
+			if(Monsters.get(((MonsterMessage) message).getWhich()).isDead()){
+				System.out.println("Monster Died");
+				Monsters.remove(((MonsterMessage) message).getWhich());
+				System.out.println(((MonsterMessage) message).getWhich());
+			}
+		}
 	}
 	
 	private boolean otherPlayerWithinScreen(PlayerMessage p){
@@ -261,5 +292,37 @@ public class PlayState extends States{
 		if(textItems != null){
 			textItems.add(new TextItem(text, x, y, textItems));
 		}
+	}
+	private boolean otherMonsterWithinAttack(Monster p){
+		if(p.getx() <= player.getx() + 40 && p.getx() > player.getx()){
+			if(player.getCurrentDirection() == 3){
+				if(p.gety() <= player.gety()+20 && p.gety() >= player.gety()-20){
+					return true;
+				}
+			}
+		}
+		if(p.getx() >= player.getx() - 40 && p.getx() < player.getx()){
+			if(player.getCurrentDirection() == 1){
+				if(p.gety() <= player.gety()+20 && p.gety() >= player.gety()-20){
+					return true;
+				}
+			}
+		}
+		if(p.gety() <= player.gety() + 60 && p.gety() > player.gety()){
+			if(player.getCurrentDirection() == 2){
+				if(p.getx() <= player.getx() + 40 && p.getx() >= player.getx()-40){
+					return true;
+				}
+			}
+		}
+		if(p.gety() >= player.gety() - 60 && p.gety() < player.gety()){
+			if(player.getCurrentDirection() == 0){
+				if(p.getx() <= player.getx() + 40 && p.getx() >= player.getx()-40){
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 }
