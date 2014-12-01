@@ -11,8 +11,14 @@ import entity.Animation;
 import entity.MapObject;
 
 public class Player extends MapObject{
-	private int health, thirst, hunger, strength, defense;  //bars
-	private int currHealth, currThirst, currHunger;
+	public int health;  //bars
+	private int thirst;
+	private int hunger;
+	private int strength;
+	private int defense;
+	public static int currHealth;
+	private int currThirst;
+	private int currHunger;
 	private int healthRate, thirstRate, hungerRate; //rates
 	private int expHealth, expThirst, expHunger; //amount of experience gained for each bar
 	private int maxBag, maxEq; //max number of items bag and equipment can store
@@ -25,7 +31,9 @@ public class Player extends MapObject{
 	private String username = "";
 	private double moveSpeed; //movement speed
 	private boolean maxLevel; //true if level is at its max
-	private boolean idle, walking, slash, dead;
+	private boolean idle, walking, slash;
+	static boolean dead;
+	static boolean isRunning = true;
 	private ArrayList<ArrayList<BufferedImage[]>> sprites;
 	private final int[] numFrames = {1, 9, 6, 6};
 	public int IDLE = 0;
@@ -42,6 +50,8 @@ public class Player extends MapObject{
 	
 	public Player(TileMap tm){
 		super(tm);
+		DecreaseThread dt = new DecreaseThread();
+		dt.start();
 		health = 768;
 		currHealth = health;
 		thirst = 700;
@@ -343,7 +353,7 @@ public class Player extends MapObject{
 	public void setSlash(boolean b){
 		slash = b;
 	}
-	public void setDead(boolean b){
+	public static void setDead(boolean b){
 		dead = b;
 	}
 	public boolean getDead(){
@@ -364,5 +374,45 @@ public class Player extends MapObject{
 	public boolean getIdle() {
 		if(idle) return true;
 		return false;
+	}
+	public void startAttacked() {
+		isRunning = true;
+		AttackedThread at = new AttackedThread();
+		at.start();
+	}
+	
+	public void stopAttacked() {
+		isRunning = false;
+	}
+}
+class DecreaseThread extends Thread {
+	public void run() {
+		while (!Player.dead) {
+			try {
+				Player.currHealth = Player.currHealth - 10;
+				if (Player.currHealth <= 0) {
+					Player.setDead(true);
+				}
+				sleep(1000);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+}
+
+class AttackedThread extends Thread {
+	public void run() {
+		while (!Player.dead && Player.isRunning) {
+			try {
+				Player.currHealth = Player.currHealth - 10;
+				if (Player.currHealth <= 0) {
+					Player.setDead(true);
+				}
+				sleep(1000);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

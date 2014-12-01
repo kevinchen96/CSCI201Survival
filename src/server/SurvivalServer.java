@@ -38,7 +38,7 @@ public class SurvivalServer {
 			System.out.println("Starting server...");
 			ServerSocket ss = new ServerSocket(8000);
 			System.out.println("Server running... waiting for players to join...");
-			while(players.size() < 2){
+			while(players.size() < 1){
 				Socket s = ss.accept();
 				PlayerThread pt = new PlayerThread(s, this, players.size());
 				players.add(pt);

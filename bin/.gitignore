@@ -1,8 +1,4 @@
-/GameStates/
-/Map/
-/entity/
-/game/
-/items/
-/message/
-/resources/
 /server/
+/entity/
+/GameStates/
+/message/
