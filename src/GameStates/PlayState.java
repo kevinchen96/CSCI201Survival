@@ -187,18 +187,18 @@ public class PlayState extends States{
 		//draw map
 		map.render(g);
 		//drawing orcs
-				for(int i = 0; i < orcs.size(); i++){
-					orcs.get(i).draw(g);
-				}
-				//drawing skeletons
-				for(int i = 0; i < skeletons.size(); i++){
-					skeletons.get(i).draw(g);
-				}
+		for(int i = 0; i < orcs.size(); i++){
+			orcs.get(i).draw(g);
+		}
+		//drawing skeletons
+		for(int i = 0; i < skeletons.size(); i++){
+			skeletons.get(i).draw(g);
+		}
 		player.draw(g);
 		
 		for(PlayerMessage p : otherPlayers){
 			if(p!=null && otherPlayerWithinScreen(p)){
-				g.drawString(p.getUsername(), (int)(p.getX() + map.getX()) - p.getUsername().length() * 3, (int)(p.getY() + map.getY()) - 25);
+				g.drawString(p.getUsername(), (int)(p.getX() + map.getX() -2) - p.getUsername().length() * 5, (int)(p.getY() + map.getY()) - 25);
 				g.drawImage(player.getAnimation(p.getCurrentDirection(), p.getCurrentAction(), p.getCurrentFrame()), (int) (p.getX() + map.getX() - 32), (int) (p.getY() + map.getY() - 32), null);
 			}
 		}
