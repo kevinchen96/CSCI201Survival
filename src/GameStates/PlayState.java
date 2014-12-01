@@ -234,6 +234,8 @@ public class PlayState extends States{
 			player.setWalking(false);
 		}if(k == KeyEvent.VK_LEFT){
 			player.setWalking(false);
+		}if(k == KeyEvent.VK_DOWN){
+			player.setSlash(false);
 		}
 		player.setIdle(true);
 	}
