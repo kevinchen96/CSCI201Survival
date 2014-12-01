@@ -88,7 +88,7 @@ public class Player extends MapObject{
 					(sprites.get(i).get(1))[j] = spritesheet.getSubimage(j*64, (i+8)*64, 64, 64);
 				}
 				for(int j = 0; j < numFrames[2]; j++){
-					(sprites.get(i).get(2))[j] = spritesheet.getSubimage(j*64, (i+12)*64, 64, 64);
+					(sprites.get(i).get(2))[j] = spritesheet.getSubimage(((j*3)+1)*64, ((i*3)+22)*64, 64, 64);
 				}
 				for(int j = 0; j < numFrames[3]; j++){
 					(sprites.get(i).get(3))[j] = spritesheet.getSubimage(j*64, 20*64, 64, 64);
