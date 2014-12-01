@@ -6,13 +6,15 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import message.Message;
+import message.UsernameMessage;
 
 public class PlayerThread extends Thread{
 
-	int index;
-	ObjectOutputStream oos;
-	ObjectInputStream ois;
-	SurvivalServer server;
+	private int index;
+	private String username;
+	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
+	private SurvivalServer server;
 	private boolean running = true;
 	
 	public PlayerThread(Socket s, SurvivalServer ss, int index) {
@@ -26,6 +28,9 @@ public class PlayerThread extends Thread{
 		this.server = ss;
 	}
 	
+	public String getUsername(){
+		return username;
+	}
 
 	public void run() {
 		while(running){
@@ -50,6 +55,10 @@ public class PlayerThread extends Thread{
 			if(message.getType().equals("CLOSE")){
 				System.out.println("a player has left the game...");
 				running = false;
+			}else if(message.getType().equals("USERNAME")){
+				this.username = ((UsernameMessage) message).getUsername();
+				oos.writeObject(message);
+				oos.flush();
 			}else{
 				oos.writeObject(message);
 				oos.flush();
