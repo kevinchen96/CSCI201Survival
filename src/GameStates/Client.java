@@ -36,7 +36,7 @@ public class Client extends Thread{
 					GameStates.recieveMessage(msg);
 				}
 			} catch (Exception e) {
-				System.out.println("Trouble reading line in Chat Client: " + e.getMessage());
+				
 			}
 		}
 	}
