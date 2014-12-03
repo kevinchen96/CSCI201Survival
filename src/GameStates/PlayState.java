@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -28,14 +27,14 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 
-import server.PlayerThread;
-import server.SurvivalServer;
 import message.ChatMessage;
+import message.DeadMessage;
+import message.GameOverMessage;
+import message.IWonMessage;
 import message.Message;
 import message.Monster2Message;
 import message.MonsterMessage;
 import message.PlayerMessage;
-import message.RecoveryMessage;
 import message.UsernameMessage;
 import message.WhisperMessage;
 import Map.TileMap;
@@ -53,6 +52,7 @@ public class PlayState extends States{
 	private JScrollPane jsp;
 	private Player player;
 	private Monster monster;
+	private boolean dead = false;
 	private static List<TextItem> textItems;
 	private Monster2 monster2;
 	private PlayerMessage[] otherPlayers = {null, null, null, null}; 
@@ -111,7 +111,11 @@ public class PlayState extends States{
 			System.out.println("Error with background in playstate: " + e.getMessage());
 		}
 		startChat();
-		Client.sendMessageToServer(new UsernameMessage(JOptionPane.showInputDialog(new JFrame(), "Please pick a username.").replace(" ", "")));
+		String name = null;
+		do{
+			name = JOptionPane.showInputDialog(new JFrame(), "Please pick a username.").replace(" ", "");			
+		}while(name ==null || name.equals(""));
+		Client.sendMessageToServer(new UsernameMessage(name));
 		
 	}
 
@@ -203,7 +207,8 @@ public class PlayState extends States{
 		for(int i = 0; i < skeletons.size(); i++){
 			skeletons.get(i).draw(g);
 		}
-			player.draw(g);
+		
+		if(!dead) player.draw(g);
 		
 		for(PlayerMessage p : otherPlayers){
 			if(p!=null && otherPlayerWithinScreen(p)){
@@ -215,73 +220,89 @@ public class PlayState extends States{
 		for(TextItem t : textItems){
 			t.draw(g);
 		}
-		g.setColor(Color.ORANGE);
-		g.fillRect(0, 400, 700, 50);
-		g.setColor(Color.RED);
-		Font font2 = new Font("Verdana", Font.BOLD, 18);
-		g.setFont(font2);
-		g.drawString("Health: " + player.currHealth + "/" + player.health, 10, 425);
+		
+		if(!dead){
+			g.setColor(Color.ORANGE);
+			g.fillRect(0, 400, 700, 50);
+			g.setColor(Color.RED);
+			Font font2 = new Font("Verdana", Font.BOLD, 18);
+			g.setFont(font2);
+			g.drawString("Health: " + player.currHealth + "/" + player.health, 10, 425);
+		}
+		
+		if(player.currHealth <= 0 && !dead){
+			dead = true;
+			player.setIdle(false);
+			player.setDead(true);
+			createNewTextItem("You have died!", (int) (player.getx() + map.getX()),(int) (player.gety() + map.getY()));
+			Client.sendMessageToServer(new DeadMessage());
+			
+		}
 		map.setPosition(GamePanel.gameWidth()/2 - player.getx(), GamePanel.gameHeight()/2 - player.gety());
 	}
 
 	@Override
 	public void keyPressed(int k) {
-
-		//movement 
-		if(k == KeyEvent.VK_UP){
-			player.setCurrDir(0);
-			player.setWalking(true);
-		}else if(k == KeyEvent.VK_RIGHT){
-			player.setCurrDir(3);
-			player.setWalking(true);
-		}else if(k == KeyEvent.VK_DOWN){
-			player.setCurrDir(2);
-			player.setWalking(true);
-		}else if(k == KeyEvent.VK_LEFT){
-			player.setCurrDir(1);
-			player.setWalking(true);
-		}else if(k == KeyEvent.VK_A){
-			player.setSlash(true);
-			for(int i = 0; i < skeletons.size(); i++){
-				if(otherMonsterWithinAttack(skeletons.get(i))){
-					System.out.println(i);
-					System.out.println("Attack to server");
-					Client.sendMessageToServer(new MonsterMessage(player.getStrength(), i));
-					player.currHealth = player.currHealth + 10;
-					player.startAttacked();
+		if(!dead){
+			//movement 
+			if(k == KeyEvent.VK_UP){
+				player.setCurrDir(0);
+				player.setWalking(true);
+			}else if(k == KeyEvent.VK_RIGHT){
+				player.setCurrDir(3);
+				player.setWalking(true);
+			}else if(k == KeyEvent.VK_DOWN){
+				player.setCurrDir(2);
+				player.setWalking(true);
+			}else if(k == KeyEvent.VK_LEFT){
+				player.setCurrDir(1);
+				player.setWalking(true);
+			}else if(k == KeyEvent.VK_A){
+				player.setSlash(true);
+				for(int i = 0; i < skeletons.size(); i++){
+					if(otherMonsterWithinAttack(skeletons.get(i))){
+						System.out.println(i);
+						System.out.println("Attack to server");
+						Client.sendMessageToServer(new MonsterMessage(player.getStrength(), i, player.getUsername()));
+						player.currHealth = player.currHealth + 10;
+						player.startAttacked();
+					}
 				}
-			}
-			for(int i = 0; i < orcs.size(); i++){
-				if(otherMonsterWithinAttack(orcs.get(i))){
-					System.out.println(i);
-					System.out.println("Attack to server");
-					Client.sendMessageToServer(new Monster2Message(player.getStrength(), i));
-					player.currHealth = player.currHealth + 30;
-					player.startAttacked();
+				for(int i = 0; i < orcs.size(); i++){
+					if(otherMonsterWithinAttack(orcs.get(i))){
+						System.out.println(i);
+						System.out.println("Attack to server");
+						Client.sendMessageToServer(new Monster2Message(player.getStrength(), i, player.getUsername()));
+						player.currHealth = player.currHealth + 15;
+						player.startAttacked();
+					}
 				}
-			}
-		}if(k == KeyEvent.VK_ENTER){
-			chat.requestFocus();
-		}		
-		player.setIdle(false);
-		Client.sendMessageToServer(new PlayerMessage(player.getCurrentDirection(), player.getCurrentAction(), player.getCurrentFrame(), player.getUsername(), player.getx(), player.gety()));
+			}if(k == KeyEvent.VK_ENTER){
+				chat.requestFocus();
+			}		
+			player.setIdle(false);
+			Client.sendMessageToServer(new PlayerMessage(player.getCurrentDirection(), player.getCurrentAction(), player.getCurrentFrame(), player.getUsername(), player.getx(), player.gety()));
+		}
+		
 	}
 
 	@Override
 	public void keyReleased(int k) {
-		// TODO Auto-generated method stub
-		if(k == KeyEvent.VK_UP){
-			player.setWalking(false);	
-		}if(k == KeyEvent.VK_RIGHT){
-			player.setWalking(false);
-		}if(k == KeyEvent.VK_DOWN){
-			player.setWalking(false);
-		}if(k == KeyEvent.VK_LEFT){
-			player.setWalking(false);
-		}if(k == KeyEvent.VK_DOWN){
-			player.setSlash(false);
+		if(!dead){
+			// TODO Auto-generated method stub
+			if(k == KeyEvent.VK_UP){
+				player.setWalking(false);	
+			}if(k == KeyEvent.VK_RIGHT){
+				player.setWalking(false);
+			}if(k == KeyEvent.VK_DOWN){
+				player.setWalking(false);
+			}if(k == KeyEvent.VK_LEFT){
+				player.setWalking(false);
+			}if(k == KeyEvent.VK_DOWN){
+				player.setSlash(false);
+			}
+			player.setIdle(true);
 		}
-		player.setIdle(true);
 	}
 	
 
@@ -314,6 +335,13 @@ public class PlayState extends States{
 		else if(message.getType().equals("MONSTER")){
 			skeletons.get(((MonsterMessage) message).getWhich()).attacked(((MonsterMessage) message).getDamage());
 			if(skeletons.get(((MonsterMessage) message).getWhich()).isDead()){
+				if(((MonsterMessage) message).getKiller().equals(player.getUsername())){
+					int r = (int) (Math.random() *10) + 1;
+					if(r == 2 || r==4 || r==8){
+						createNewTextItem("You got '" + r*10 + "' extra health!", (int)(player.getx() + map.getX()), (int) ( player.gety() + map.getY()));
+						player.currHealth = player.currHealth + r*10;
+					}
+				}
 				player.stopAttacked();
 				//player.currHealth = player.currHealth + 100;
 				System.out.println("Monster Died");
@@ -321,15 +349,36 @@ public class PlayState extends States{
 				System.out.println(((MonsterMessage) message).getWhich());
 			}
 		}
+		else if(message.getType().equals("DEAD")){
+			otherPlayers[message.getIndex()] = null;
+		}
 		else if (message.getType().equals("MONSTER2")) {
 			orcs.get(((Monster2Message) message).getWhich()).attacked(((Monster2Message) message).getDamage());
 			if(orcs.get(((Monster2Message) message).getWhich()).isDead()){
+				if(((Monster2Message) message).getKiller().equals(player.getUsername())){
+					int r = (int) (Math.random() *10) + 1;
+					if(r == 3 || r==5 || r==10){
+						System.out.println("sweet");
+						createNewTextItem("You got '" + r*10 + "' extra health!", (int)(player.getx() + map.getX()), (int) ( player.gety() + map.getY()));
+						player.currHealth = player.currHealth + r*10;
+					}
+				}
 				player.stopAttacked();
 				//player.currHealth = player.currHealth + 200;
 				System.out.println("Monster Died");
 				orcs.remove(((Monster2Message) message).getWhich());
 				System.out.println(((Monster2Message) message).getWhich());
 			}
+		}
+		else if(message.getType().equals("WHO")){
+			if(!dead){
+				Client.sendMessageToServer(new IWonMessage());
+			}
+		}
+		else if(message.getType().equals("GAMEOVER")){
+			String winner = ((GameOverMessage)message).getWinner();
+			JOptionPane.showMessageDialog(new JFrame("Game Over!"), winner + " has won the game!");
+			System.exit(0);
 		}
 	}
 	

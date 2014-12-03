@@ -11,15 +11,18 @@ import java.util.Collections;
 import java.util.List;
 
 import message.ChatMessage;
+import message.GameOverMessage;
 import message.Message;
 import message.StartMessage;
 import message.StartingMessage;
 import message.WhisperMessage;
+import message.WhoWonMessage;
 
 public class SurvivalServer {
 	
 	List<PlayerThread> players; //a player's position in list is 1 minus it's id (first part of any message)
 	private boolean playing = false;
+	private int playersAlive;
 
 	public SurvivalServer(){
 		players = Collections.synchronizedList(new ArrayList<PlayerThread>());
@@ -48,6 +51,7 @@ public class SurvivalServer {
 				sendAll(new StartMessage(players.size()));
 			}
 			sendAll(new StartMessage(5));
+			playersAlive = players.size();
 			System.out.println("All players have joined.. game is starting..");
 			playing = true;
 		} catch (IOException e) {
@@ -72,6 +76,16 @@ public class SurvivalServer {
 			}
 			else if(msg.getType().equals("PLAYER")){
 				sendAllExceptMe(msg);
+			}
+			else if(msg.getType().equals("DEAD")){
+				playersAlive--;
+				if(playersAlive == 1){
+					sendAll(new WhoWonMessage());
+				}
+			}
+			else if(msg.getType().equals("IWON")){
+				sendAll(new GameOverMessage(players.get(msg.getIndex()).getUsername()));
+				System.exit(0);
 			}
 			else if(msg.getType().equals(("USERNAME"))){
 				sendPlayer(msg.getIndex(), msg);

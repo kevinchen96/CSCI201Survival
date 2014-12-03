@@ -51,6 +51,7 @@ public class PlayerThread extends Thread{
 	}
 	
 	public void send(Message message){
+		if(message.getType().equals("MONSTER") || message.getType().equals("MONSTER2"))message.setIndex(index);
 		try{
 			if(message.getType().equals("CLOSE")){
 				System.out.println("a player has left the game...");
